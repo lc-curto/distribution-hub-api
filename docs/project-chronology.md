@@ -165,18 +165,18 @@ Para cada módulo, siga esta sequência:
 ## Fazer
 
 - [x] `[DOC]` Identificar os atores do sistema
-- [ ] `[DOC]` Definir os papéis iniciais: `ADMIN` e `OPERATOR`
-- [ ] `[DOC]` Definir o que um utilizador autenticado pode fazer
-- [ ] `[DOC]` Definir o que é uma empresa/tenant
-- [ ] `[DOC]` Definir o isolamento entre empresas
-- [ ] `[DOC]` Definir regras de clientes
-- [ ] `[DOC]` Definir regras de produtos e preços
-- [ ] `[DOC]` Definir regras de estoque
-- [ ] `[DOC]` Definir regras de pedidos
-- [ ] `[DOC]` Definir regras de recebíveis
+- [x] `[DOC]` Definir os papéis iniciais: `ADMIN` e `OPERATOR`
+- [x] `[DOC]` Definir o que um utilizador autenticado pode fazer
+- [x] `[DOC]` Definir o que é uma empresa/tenant
+- [x] `[DOC]` Definir o isolamento entre empresas
+- [x] `[DOC]` Definir regras de clientes
+- [x] `[DOC]` Definir regras de produtos e preços
+- [x] `[DOC]` Definir regras de estoque
+- [x] `[DOC]` Definir regras de pedidos
+- [x] `[DOC]` Definir regras de recebíveis
 - [x] `[DOC]` Definir requisitos funcionais
 - [x] `[DOC]` Definir requisitos não funcionais
-- [ ] `[DOC]` Definir critérios de aceitação da primeira fatia
+- [x] `[DOC]` Definir critérios de aceitação da primeira fatia
 - [x] `[DOC]` Atualizar `docs/specs/001-auth-tenants-customers.md`
 
 ## Primeira spec
