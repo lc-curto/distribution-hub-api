@@ -33,6 +33,44 @@ Depois do login, o utilizador seleciona uma empresa ativa. As operações seguin
 ### RN-005 — Sem empresa ativa
 
 As áreas operacionais ficam bloqueadas sem uma empresa ativa válida.
+### RN-006 — Criação inicial da empresa
+
+Um utilizador que ainda não possui uma empresa pode criar a primeira
+empresa durante o cadastro inicial.
+
+O cadastro deve recolher:
+
+- nome do utilizador;
+- email;
+- palavra-passe;
+- nome da empresa.
+
+O fluxo de criação é:
+
+1. validar os dados;
+2. criar o utilizador;
+3. criar a empresa;
+4. criar o vínculo entre o utilizador e a empresa;
+5. atribuir o papel `ADMIN`;
+6. iniciar a sessão;
+7. definir a empresa criada como ativa.
+
+A criação do utilizador, da empresa e do vínculo deve ocorrer numa única
+transação. Se qualquer etapa falhar, nenhuma alteração deve permanecer.
+
+### RN-007 — Primeiro administrador
+
+O utilizador que cria a empresa é automaticamente associado a ela com o papel `ADMIN`.
+
+### RN-008 — Criação transacional
+
+A criação do utilizador, da empresa e do vínculo `tenant_users` deve ocorrer
+na mesma transação. Se uma etapa falhar, nenhuma das alterações deve ser mantida.
+
+### RN-009 — Empresa com administrador
+
+Uma empresa deve possuir pelo menos um `ADMIN` ativo.
+
 
 <!-- ============================================================
      CONTEXTO: PAPÉIS E RESPONSABILIDADES

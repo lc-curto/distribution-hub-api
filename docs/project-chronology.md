@@ -142,25 +142,33 @@ Transformar a primeira spec num modelo de dados revisado.
 
 \- [x] \`[DOC]\` Regras de isolamento definidas — **\*\*Prova:\*\*** \`docs/requirements/business-rules-mvp.md\` — RN-001 a RN-005
 
-**## Tarefas \`[DOC]\`**
+**## Tarefas `[DOC]`**
 
-\- [ ] Rever a spec e retirar dúvidas
+- [x] Rever a spec e retirar dúvidas
 
-\- [ ] Definir campos de \`users\`
+- [x] Definir o fluxo de criação da primeira empresa
 
-\- [ ] Definir campos de \`tenants\`
+- [x] Definir a atribuição automática do primeiro `ADMIN`
 
-\- [ ] Definir campos de \`tenant_users\`
+- [x] Definir o fluxo de onboarding
 
-\- [ ] Definir campos de \`customers\`
+- [x] Definir o comportamento de utilizador sem empresa
 
-\- [ ] Definir campos obrigatórios e opcionais
+- [x] Definir campos de `users`
 
-\- [ ] Definir estados de utilizador, empresa e cliente
+- [x] Definir campos de `tenants`
 
-\- [ ] Criar \`docs/database/data-model.md\`
+- [x] Definir campos de `tenant_users`
 
-\- [ ] Criar o dicionário de dados
+- [x] Definir campos de `customers`
+
+- [ ] Definir campos obrigatórios e opcionais
+
+- [ ] Definir estados de utilizador, empresa e cliente
+
+- [ ] Criar o dicionário de dados
+
+- [x] Criar `docs/database/data-model.md`
 
 **## Tarefas \`[BD]\`**
 
@@ -175,6 +183,7 @@ Transformar a primeira spec num modelo de dados revisado.
 \- [ ] Definir regras de unicidade
 
 \- [ ] Definir índices iniciais
+
 
 \- [ ] Criar \`database/diagrams/er-model.mmd\`
 

@@ -15,6 +15,19 @@ Pode:
 
 O sistema não pode remover nem despromover o último `ADMIN` ativo da empresa.
 
+## Criação do primeiro ADMIN
+
+O primeiro `ADMIN` não é criado manualmente por outro administrador.
+
+Ele é criado automaticamente quando o primeiro utilizador conclui o cadastro
+de uma nova empresa.
+
+Utilizador cria conta
+- Empresa é criada
+- Vínculo utilizador–empresa é criado
+- role = ADMIN.
+
+
 ## OPERATOR
 
 Utilizador responsável pelas operações diárias da empresa.
