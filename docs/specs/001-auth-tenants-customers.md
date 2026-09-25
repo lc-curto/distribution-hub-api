@@ -37,3 +37,16 @@ Permitir que um utilizador entre no sistema, selecione uma empresa à qual perte
 - regras de autorização;
 - telas React;
 - testes unitários, integração e E2E.
+
+## Atores envolvidos
+
+- Administrador da empresa
+- Operador da empresa
+- Utilizador não autenticado
+
+## Documentos relacionados
+
+- [`actors.md`](../requirements/actors.md)
+- [`authenticated-user-actions.md`](../requirements/authenticated-user-actions.md)
+- [`business-rules-mvp.md`](../requirements/business-rules-mvp.md)
+
