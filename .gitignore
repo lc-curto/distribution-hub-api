@@ -10,3 +10,5 @@ coverage/
 .mypy_cache/
 .vscode/
 .DS_Store
+
+*.tsbuildinfo
