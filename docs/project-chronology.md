@@ -164,7 +164,7 @@ Para cada módulo, siga esta sequência:
 
 ## Fazer
 
-- [ ] `[DOC]` Identificar os atores do sistema
+- [x] `[DOC]` Identificar os atores do sistema
 - [ ] `[DOC]` Definir os papéis iniciais: `ADMIN` e `OPERATOR`
 - [ ] `[DOC]` Definir o que um utilizador autenticado pode fazer
 - [ ] `[DOC]` Definir o que é uma empresa/tenant
