@@ -142,33 +142,33 @@ Transformar a primeira spec num modelo de dados revisado.
 
 \- [x] \`[DOC]\` Regras de isolamento definidas — **\*\*Prova:\*\*** \`docs/requirements/business-rules-mvp.md\` — RN-001 a RN-005
 
-**## Tarefas `[DOC]`**
+## Tarefas `[DOC]`
 
-- [x] Rever a spec e retirar dúvidas
+\- [x] Rever a spec e retirar dúvidas — **Prova:** `docs/specs/001-auth-tenants-customers.md`
 
-- [x] Definir o fluxo de criação da primeira empresa
+\- [x] Definir o fluxo de criação da primeira empresa — **Arquivo:** `docs/requirements/business-rules-mvp.md` + `docs/specs/001-auth-tenants-customers.md`
 
-- [x] Definir a atribuição automática do primeiro `ADMIN`
+\- [x] Definir a atribuição automática do primeiro `ADMIN` — **Arquivo:** `docs/requirements/business-rules-mvp.md` + `docs/requirements/roles.md`
 
-- [x] Definir o fluxo de onboarding
+\- [x] Definir o fluxo de onboarding — **Arquivo:** `docs/requirements/authenticated-user-actions.md` + `docs/specs/001-auth-tenants-customers.md`
 
-- [x] Definir o comportamento de utilizador sem empresa
+\- [x] Definir o comportamento de utilizador sem empresa — **Arquivo:** `docs/requirements/authenticated-user-actions.md`
 
-- [x] Definir campos de `users`
+\- [x] Definir campos de `users` — **Arquivo:** `docs/database/data-model.md`
 
-- [x] Definir campos de `tenants`
+\- [x] Definir campos de `tenants` — **Arquivo:** `docs/database/data-model.md`
 
-- [x] Definir campos de `tenant_users`
+\- [x] Definir campos de `tenant_users` — **Arquivo:** `docs/database/data-model.md`
 
-- [x] Definir campos de `customers`
+\- [x] Definir campos de `customers` — **Arquivo:** `docs/database/data-model.md`
 
-- [ ] Definir campos obrigatórios e opcionais
+\- [ ] Definir campos obrigatórios e opcionais — **Arquivo:** `docs/database/data-model.md`
 
-- [ ] Definir estados de utilizador, empresa e cliente
+\- [ ] Definir estados de utilizador, empresa e cliente — **Arquivo:** `docs/database/data-model.md`
 
-- [ ] Criar o dicionário de dados
+\- [ ] Criar o dicionário de dados — **Arquivo:** `docs/database/data-model.md
 
-- [x] Criar `docs/database/data-model.md`
+\- [x] Criar `docs/database/data-model.md` — **Entrega:** `docs/database/data-model.md`
 
 **## Tarefas \`[BD]\`**
 
