@@ -174,8 +174,8 @@ Para cada módulo, siga esta sequência:
 - [ ] `[DOC]` Definir regras de estoque
 - [ ] `[DOC]` Definir regras de pedidos
 - [ ] `[DOC]` Definir regras de recebíveis
-- [ ] `[DOC]` Definir requisitos funcionais
-- [ ] `[DOC]` Definir requisitos não funcionais
+- [x] `[DOC]` Definir requisitos funcionais
+- [x] `[DOC]` Definir requisitos não funcionais
 - [ ] `[DOC]` Definir critérios de aceitação da primeira fatia
 - [x] `[DOC]` Atualizar `docs/specs/001-auth-tenants-customers.md`
 
