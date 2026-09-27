@@ -9,6 +9,7 @@ Documentação comum do produto, mantida no repositório da API. O frontend est�
 - [Requisitos e pendências](requirements.md)
 - [Arquitetura](architecture.md)
 - [API](api.md)
+- [Roadmap de aprendizagem e desenvolvimento](learning-roadmap.md)
 - [Spec 001 — acesso, empresas e clientes](specs/001-auth-tenants-customers.md)
 
 ## Estado atual

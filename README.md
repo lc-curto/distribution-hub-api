@@ -8,6 +8,7 @@ Backend FastAPI do Cosmetics Hub. O frontend React/TypeScript fica no repositór
 - [Produto e escopo](docs/product.md)
 - [Estado da API](docs/api.md)
 - [Arquitetura](docs/architecture.md)
+- [Roadmap de aprendizagem e desenvolvimento](docs/learning-roadmap.md)
 
 ## Desenvolvimento local
 
