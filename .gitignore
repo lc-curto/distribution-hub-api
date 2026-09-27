@@ -7,10 +7,12 @@ dist/
 .next/
 coverage/
 .pytest_cache/
+.ruff_cache/
 .mypy_cache/
 .vscode/
 .DS_Store
 
 *.tsbuildinfo
-apps/api/*.egg-info/
+*.egg-info/
 *.log
+.coverage

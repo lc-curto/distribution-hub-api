@@ -1,0 +1,10 @@
+%% Referência conceptual inicial; não garante a representação de todas as tabelas atuais ou futuras.
+flowchart LR
+    users["users<br/>Pessoas com conta"]
+    tenants["tenants<br/>Empresas"]
+    tenant_users["tenant_users<br/>Pessoa, empresa e papel"]
+    customers["customers<br/>Clientes comerciais"]
+
+    users ---|associação e papel por empresa| tenant_users
+    tenants ---|associação de pessoas| tenant_users
+    tenants ---|mantém| customers
