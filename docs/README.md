@@ -1,6 +1,6 @@
-# Documentação do Cosmetics Hub
+# Documentação do Distribution Hub
 
-Documentação comum do produto, mantida no repositório da API. O frontend está em [cosmetics-hub-web](https://github.com/lc-curto/cosmetics-hub-web).
+Documentação comum do produto, mantida no repositório da API. O frontend está em [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web).
 
 ## Comece por aqui
 

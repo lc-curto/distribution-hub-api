@@ -2,7 +2,7 @@
 
 ## Visão
 
-O Cosmetics Hub é uma plataforma de gestão comercial para pequenas empresas e distribuidores de cosméticos. Reúne clientes, catálogo, estoque, pedidos e valores a receber no contexto de cada empresa.
+O Distribution Hub é uma plataforma de gestão comercial para pequenas empresas e distribuidores de produtos. Reúne clientes, catálogo, estoque, pedidos e valores a receber no contexto de cada empresa.
 
 ## Primeira entrega documentada
 

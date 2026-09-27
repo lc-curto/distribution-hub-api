@@ -6,8 +6,8 @@ O sistema terá uma aplicação web e uma API em exatamente dois repositórios. 
 
 ```mermaid
 flowchart LR
-    Pessoa[Equipe comercial] --> Web[cosmetics-hub-web<br/>React + TypeScript + Vite]
-    Web -->|HTTP / JSON| API[cosmetics-hub-api<br/>FastAPI + Python]
+    Pessoa[Equipe comercial] --> Web[distribution-hub-web<br/>React + TypeScript + Vite]
+    Web -->|HTTP / JSON| API[distribution-hub-api<br/>FastAPI + Python]
     API --> DB[(PostgreSQL)]
 ```
 
@@ -27,7 +27,7 @@ A documentação comum fica no repositório da API. A separação de repositóri
 
 - Manter API como monólito modular.
 - Usar React/TypeScript/Vite no frontend e FastAPI/Python na API.
-- Manter exatamente dois repositórios: `cosmetics-hub-web` e `cosmetics-hub-api`.
+- Manter exatamente dois repositórios: `distribution-hub-web` e `distribution-hub-api`.
 - Adotar OAuth 2.0 somente no nível de framework/protocolo; o desenho de identidade permanece pendente.
 
 ## Isolamento e operação

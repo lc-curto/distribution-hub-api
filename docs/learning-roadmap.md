@@ -28,7 +28,7 @@ Para cada item, use este ciclo curto:
 2. **Observar:** leia a documentação oficial e veja um exemplo mínimo.
 3. **Praticar:** faça um exercício isolado, sem misturar ainda com o projeto.
 4. **Explicar:** descreva o exercício com suas próprias palavras.
-5. **Aplicar:** só então faça a alteração no Cosmetics Hub.
+5. **Aplicar:** só então faça a alteração no Distribution Hub.
 
 Não tente aprender toda a tecnologia antes de começar. Estude apenas o conceito necessário para a tarefa atual e registre o que ficou para depois.
 
@@ -82,7 +82,7 @@ Faça um passo por vez, confirmando o resultado antes de continuar:
 
 ```bash
 # 1. Entre na pasta do repositório
-cd caminho/para/cosmetics-hub-api
+cd caminho/para/distribution-hub-api
 
 # 2. Confira as ferramentas
 python3 --version
@@ -111,7 +111,7 @@ uvicorn app.main:app --reload
 Abra outro terminal, ative o ambiente novamente e verifique:
 
 ```bash
-cd caminho/para/cosmetics-hub-api
+cd caminho/para/distribution-hub-api
 source .venv/bin/activate
 curl http://127.0.0.1:8000/health
 pytest

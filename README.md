@@ -1,6 +1,6 @@
-# Cosmetics Hub API
+# Distribution Hub API
 
-Backend FastAPI do Cosmetics Hub. O frontend React/TypeScript fica no repositório separado [cosmetics-hub-web](https://github.com/lc-curto/cosmetics-hub-web).
+Backend FastAPI do Distribution Hub. O frontend React/TypeScript fica no repositório separado [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web).
 
 ## Comece por aqui
 
