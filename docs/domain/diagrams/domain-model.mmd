@@ -1,0 +1,10 @@
+%% Modelo conceitual documentado; não representa schema implementado.
+flowchart LR
+    users["Usuário<br/>Pessoa com conta"]
+    tenants["Empresa<br/>Organização cliente"]
+    tenant_users["Associação<br/>Pessoa + empresa + papel"]
+    customers["Cliente comercial<br/>Atendido pela empresa"]
+
+    users ---|pode ter várias associações| tenant_users
+    tenants ---|pode ter várias associações| tenant_users
+    tenants ---|mantém| customers
