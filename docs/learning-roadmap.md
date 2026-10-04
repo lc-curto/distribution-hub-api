@@ -132,25 +132,27 @@ Antes de começar, explique em uma frase: “o ambiente virtual separa as depend
 
 - [ ] Revisar Python: ambiente virtual, imports, funções, classes e exceções.
 
-- [ ] Revisar HTTP: request, response, métodos, status codes e JSON.
+- [x] Revisar HTTP: request, response, métodos, status codes e JSON.
 
-- [ ] Entender o que são API, backend, frontend, banco de dados e migration.
+- [x] Entender o que são API, backend, frontend, banco de dados e migration.
 
-- [ ] Ler o README e [arquitetura](architecture.md).
+- [x] Ler o README e [arquitetura](architecture.md).
+
 
 ### Fazer
 
-- [ ] Clonar e executar a API localmente.
+- [x] Clonar e executar a API localmente.
 
-- [ ] Executar `GET /health`.
+- [x] Executar `GET /health`.
 
-- [ ] Executar os testes existentes.
+- [x] Executar os testes existentes.
 
-- [ ] Criar uma branch de trabalho para a primeira funcionalidade.
+- [x] Criar uma branch de trabalho para a primeira funcionalidade.
 
 - [ ] Registrar dúvidas em uma seção pessoal de notas.
 
-**Entrega:** consigo iniciar a API, chamar `/health` e explicar o fluxo básico.
+
+**Entrega:** consigo iniciar a API, chamar `/health`, executar os testes existentes e explicar o fluxo básico entre frontend, API, backend, servidor e base de dados.
 
 **Antes de avançar:** devo saber onde ficam o código da API, os testes, as configurações e o comando para executar o projeto.
 
@@ -405,48 +407,35 @@ Não iniciar esta fase antes de concluir o primeiro fluxo completo.
 
 Copie esta seção para cada semana:
 
-**Semana de:** ____ / ____ / ____
+**Semana de:** 04 / 10 / 2026
 
-**Objetivo único:** __________________________________________
+**Objetivo único:** Preparar e validar o ambiente de desenvolvimento da API.
 
-**Estudar antes:** ___________________________________________
+**Estudar antes:** Ambiente virtual, Docker, API, backend, HTTP, testes, Git e migrations.
 
-- [ ] Estudo concluído
-
-- [ ] Notas escritas com minhas próprias palavras
-
-- [ ] Implementação pequena concluída
-
-- [ ] Teste/verificação executado
-
-- [ ] Dúvidas registradas
-
+- [x] Estudo concluído
+- [x] Notas escritas com minhas próprias palavras
+- [x] Implementação pequena concluída
+- [x] Teste/verificação executado
+- [x] Dúvidas registradas
 - [ ] Documentação atualizada
 
 **O que aprendi:**
 
-> 
+> Aprendi a diferença entre frontend, backend, API, servidor e base de dados.
+> Aprendi que o ambiente virtual isola as dependências Python.
+> Aprendi que o Docker executa o PostgreSQL num container.
+> Aprendi a iniciar a API com Uvicorn, testar o endpoint `/health` manualmente
+> e executar testes automatizados com Pytest.
+> Aprendi que um modelo Python, uma migration e uma tabela PostgreSQL são coisas
+> diferentes e precisam de estar alinhados.
 
 **O que ficou difícil:**
 
-> 
+> Ainda preciso consolidar a diferença entre o modelo Python, a migration
+> e a tabela PostgreSQL. Também preciso praticar mais comandos Git.
 
 **Próximo passo concreto:**
 
-> 
-
-## Quando estiver perdido
-
-Pare de codificar e responda, por escrito:
-
-1. Qual comportamento estou tentando entregar?
-
-1. Qual conceito ainda não entendo?
-
-1. Que menor exemplo posso fazer isoladamente?
-
-1. Como vou saber que funcionou?
-
-1. Essa decisão está definida em [requisitos](requirements.md) ou ainda é uma pendência?
-
-Se não conseguir responder, a próxima tarefa é **estudar e esclarecer**, não implementar mais código.
+> Estudar chaves primárias, colunas, tipos de dados, constraints e o ciclo
+> upgrade/downgrade do Alembic antes de criar uma tabela mínima.
