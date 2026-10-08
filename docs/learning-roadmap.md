@@ -36,7 +36,7 @@ Não tente aprender toda a tecnologia antes de começar. Estude apenas o conceit
 
 Mantenha três grupos para não tentar fazer tudo ao mesmo tempo:
 
-- **Agora:** uma única tarefa pequena. Atualmente: Fase 0 — preparar o ambiente.
+- **Agora:** uma única tarefa pequena. Atualmente: modelar o domínio e preparar o primeiro fluxo de persistência.
 - **Depois:** as próximas duas ou três tarefas da fase atual.
 - **Mais tarde:** ideias, melhorias e módulos que ainda não são necessários para o primeiro fluxo.
 
@@ -132,12 +132,11 @@ Antes de começar, explique em uma frase: “o ambiente virtual separa as depend
 
 - [ ] Revisar Python: ambiente virtual, imports, funções, classes e exceções.
 
-- [x] Revisar HTTP: request, response, métodos, status codes e JSON.
+- [ ] Revisar HTTP: request, response, métodos, status codes e JSON.
 
-- [x] Entender o que são API, backend, frontend, banco de dados e migration.
+- [ ] Entender o que são API, backend, frontend, banco de dados e migration.
 
-- [x] Ler o README e [arquitetura](architecture.md).
-
+- [ ] Ler o README e [arquitetura](architecture.md).
 
 ### Fazer
 
@@ -149,10 +148,9 @@ Antes de começar, explique em uma frase: “o ambiente virtual separa as depend
 
 - [x] Criar uma branch de trabalho para a primeira funcionalidade.
 
-- [ ] Registrar dúvidas em uma seção pessoal de notas.
+- [x] Registrar dúvidas em uma seção pessoal de notas.
 
-
-**Entrega:** consigo iniciar a API, chamar `/health`, executar os testes existentes e explicar o fluxo básico entre frontend, API, backend, servidor e base de dados.
+**Entrega:** consigo iniciar a API, chamar `/health` e explicar o fluxo básico.
 
 **Antes de avançar:** devo saber onde ficam o código da API, os testes, as configurações e o comando para executar o projeto.
 
@@ -164,18 +162,23 @@ Antes de começar, explique em uma frase: “o ambiente virtual separa as depend
 
 ### 1.1 PostgreSQL e migrations
 
-**Exemplo:** criar uma tabela mínima `users` com `id`, `email` e `created_at`. Primeiro você cria o modelo, depois gera uma migration, aplica a migration e confirma que a tabela existe no PostgreSQL. Se apagar o banco e aplicar as migrations novamente, o resultado deve ser igual.
+**Exemplo:** criar uma tabela mínima `users` com `id`, `email` e `created_at`. Primeiro foi criado o modelo, depois gerada a migration, aplicada a migration e confirmada a tabela no PostgreSQL.
 
+**Estado:** concluído.
 
 **Estudar:** tabelas, colunas, chaves primárias, chaves estrangeiras, índices, constraints, transações, SQLAlchemy e Alembic.
 
-- [ ] Entender como o PostgreSQL inicia no Docker Compose.
+- [x] Entender como o PostgreSQL inicia no Docker Compose.
 
-- [ ] Entender a diferença entre modelo Python, tabela e migration.
+- [x] Entender a diferença entre modelo Python, tabela e migration.
 
-- [ ] Criar uma migration simples e saber revertê-la.
+- [x] Criar uma migration simples e saber revertê-la.
 
-- [ ] Verificar a tabela criada diretamente no banco.
+- [x] Verificar a tabela criada diretamente no banco.
+
+- [x] Confirmar a utilização de `upgrade` e `downgrade`.
+
+- [x] Confirmar o SQL gerado pela migration com `--sql`.
 
 ### 1.2 Primeiro modelo
 
@@ -184,7 +187,11 @@ Antes de começar, explique em uma frase: “o ambiente virtual separa as depend
 
 Criar somente estas entidades iniciais:
 
-- [ ] `users` — pessoa que acessa o sistema.
+- [x] `users` — pessoa que acessa o sistema.
+
+O modelo `User` e a migration inicial da tabela `users` foram implementados e validados.
+
+Ainda não foram implementadas:
 
 - [ ] `tenants` — empresa.
 
@@ -407,35 +414,48 @@ Não iniciar esta fase antes de concluir o primeiro fluxo completo.
 
 Copie esta seção para cada semana:
 
-**Semana de:** 04 / 10 / 2026
+**Semana de:** ____ / ____ / ____
 
-**Objetivo único:** Preparar e validar o ambiente de desenvolvimento da API.
+**Objetivo único:** __________________________________________
 
-**Estudar antes:** Ambiente virtual, Docker, API, backend, HTTP, testes, Git e migrations.
+**Estudar antes:** ___________________________________________
 
-- [x] Estudo concluído
-- [x] Notas escritas com minhas próprias palavras
-- [x] Implementação pequena concluída
-- [x] Teste/verificação executado
-- [x] Dúvidas registradas
+- [ ] Estudo concluído
+
+- [ ] Notas escritas com minhas próprias palavras
+
+- [ ] Implementação pequena concluída
+
+- [ ] Teste/verificação executado
+
+- [ ] Dúvidas registradas
+
 - [ ] Documentação atualizada
 
 **O que aprendi:**
 
-> Aprendi a diferença entre frontend, backend, API, servidor e base de dados.
-> Aprendi que o ambiente virtual isola as dependências Python.
-> Aprendi que o Docker executa o PostgreSQL num container.
-> Aprendi a iniciar a API com Uvicorn, testar o endpoint `/health` manualmente
-> e executar testes automatizados com Pytest.
-> Aprendi que um modelo Python, uma migration e uma tabela PostgreSQL são coisas
-> diferentes e precisam de estar alinhados.
+>
 
 **O que ficou difícil:**
 
-> Ainda preciso consolidar a diferença entre o modelo Python, a migration
-> e a tabela PostgreSQL. Também preciso praticar mais comandos Git.
+>
 
 **Próximo passo concreto:**
 
-> Estudar chaves primárias, colunas, tipos de dados, constraints e o ciclo
-> upgrade/downgrade do Alembic antes de criar uma tabela mínima.
+>
+
+## Quando estiver perdido
+
+Pare de codificar e responda, por escrito:
+
+1. Qual comportamento estou tentando entregar?
+
+1. Qual conceito ainda não entendo?
+
+1. Que menor exemplo posso fazer isoladamente?
+
+1. Como vou saber que funcionou?
+
+1. Essa decisão está definida em [requisitos](requirements.md) ou ainda é uma pendência?
+
+Se não conseguir responder, a próxima tarefa é **estudar e esclarecer**, não implementar mais código.
