@@ -22,3 +22,6 @@ pythonpath = ["."]
 
 [tool.setuptools.packages.find]
 include = ["app*"]
+
+[tool.ruff]
+extend-exclude = ["alembic/versions"]

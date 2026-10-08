@@ -1,14 +1,11 @@
 from logging.config import fileConfig
 
-from alembic import context
-from sqlalchemy import create_engine
-from sqlalchemy import pool
+from sqlalchemy import create_engine, pool
 
+import app.db.models  # noqa: F401
+from alembic import context
 from app.core.config import settings
 from app.db.base import Base
-from app.db.models import User
-
-
 
 config = context.config
 
@@ -18,9 +15,14 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 
+def get_database_url() -> str:
+    x_args = context.get_x_argument(as_dictionary=True)
+    return x_args.get("database_url", settings.database_url)
+
+
 def run_migrations_offline() -> None:
     context.configure(
-        url=settings.database_url,
+        url=get_database_url(),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -32,7 +34,7 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     connectable = create_engine(
-        settings.database_url,
+        get_database_url(),
         poolclass=pool.NullPool,
     )
 
