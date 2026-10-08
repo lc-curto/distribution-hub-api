@@ -112,14 +112,14 @@ docs/           # Documentação do produto e arquitetura
 
 ## Documentação
 
-- [Índice da documentação](docs/README.md)
-- [Produto e âmbito](docs/product.md)
-- [Domínio e regras de negócio](docs/domain.md)
-- [Requisitos](docs/requirements.md)
-- [Arquitetura](docs/architecture.md)
-- [API](docs/api.md)
-- [Modelo Entidade–Relacionamento](docs/er.md)
+- [Índice da documentação](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/README.md)
+- [Produto e âmbito](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/product.md)
+- [Domínio e regras de negócio](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/domain.md)
+- [Requisitos](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/requirements.md)
+- [Arquitetura](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/architecture.md)
+- [API](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/api.md)
+- [Modelo Entidade–Relacionamento](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/er.md)
 
-## Repositório relacionado
+## Repositórios relacionados
 
 - **Frontend:** [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web)
