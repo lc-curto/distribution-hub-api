@@ -18,18 +18,61 @@ flowchart LR
 | Web | React, TypeScript e Vite | Scaffold; sem fluxos comerciais |
 | API | Python e FastAPI | `GET /health` implementado |
 | Dados | PostgreSQL | Docker Compose local |
-| Persistência | SQLAlchemy e Alembic | Dependências presentes; sem schema comercial |
+| Persistência | SQLAlchemy e Alembic | Configurados; tabela inicial `users` criada |
 | Integração | HTTP/JSON e OpenAPI gerado | Contrato atual contém essencialmente health |
 
 A documentação comum fica no repositório da API. A separação de repositórios não implica microserviços nem deploy independente já configurado.
 
+## Persistência atual
+
+A aplicação possui uma fundação inicial de persistência:
+
+```text
+.env
+  ↓
+app/core/config.py
+  ↓
+app/db/session.py
+  ↓
+SQLAlchemy Engine
+  ↓
+PostgreSQL
+```
+
+O modelo atual é:
+
+```text
+User
+  ↓
+users
+```
+
+A estrutura da tabela `users` é controlada pelo Alembic através da migration inicial.
+
+A tabela `users` possui:
+
+- `id` como chave primária;
+- `email` como campo obrigatório e único;
+- `created_at` como data de criação gerada pelo PostgreSQL.
+
+Ainda não foram implementadas as tabelas de empresas, associações entre usuários e empresas ou clientes.
+
 ## Decisões vigentes
 
-- Manter API como monólito modular.
+- Manter a API como monólito modular.
 - Usar React/TypeScript/Vite no frontend e FastAPI/Python na API.
-- Manter exatamente dois repositórios: `distribution-hub-web` e `distribution-hub-api`.
+- Manter exatamente dois repositórios:
+  - `distribution-hub-web`;
+  - `distribution-hub-api`.
+- Usar PostgreSQL como banco de dados.
+- Usar Docker Compose para executar o PostgreSQL localmente.
+- Usar SQLAlchemy para o mapeamento entre Python e banco de dados.
+- Usar Alembic para versionar alterações na estrutura do banco.
+- Manter as configurações da aplicação no `.env`, carregadas por `pydantic-settings`.
 - Adotar OAuth 2.0 somente no nível de framework/protocolo; o desenho de identidade permanece pendente.
 
 ## Isolamento e operação
 
-O papel pertence ao vínculo usuário–empresa. O backend deve validar identidade, associação, empresa ativa e permissão em cada operação protegida. CI valida API e frontend separadamente; não há ainda integração entre aplicações, produção, SLA, alta disponibilidade ou observabilidade avançada.
+O papel pertence ao vínculo entre usuário e empresa. O backend deve validar identidade, associação, empresa ativa e permissão em cada operação protegida.
+
+CI valida a API e o frontend separadamente. Ainda não há integração entre as aplicações, ambiente de produção, SLA, alta disponibilidade ou observabilidade avançada.

@@ -1,6 +1,6 @@
 # Domínio e regras essenciais
 
-> O domínio abaixo é especificado; ainda não representa modelos ou migrations implementados.
+> O domínio abaixo é especificado. A entidade `User` já possui um modelo SQLAlchemy e uma migration inicial; as restantes entidades ainda não foram implementadas.
 
 ## Conceitos
 
