@@ -14,7 +14,7 @@ Documentação comum do produto, mantida no repositório da API. O frontend est�
 
 ## Estado atual
 
-A API possui apenas `GET /health`, coberto por teste. O frontend é um scaffold. PostgreSQL está configurado para desenvolvimento local, mas não há modelos, migrations ou fluxos comerciais implementados.
+A API expõe atualmente `GET /health`, coberto por teste, mas ainda não possui endpoints comerciais. O frontend é um scaffold. PostgreSQL está configurado para desenvolvimento local; os modelos SQLAlchemy `User` e `Tenant` e migrations para `users` e `tenants` já existem. O vínculo `tenant_users`, os clientes e os fluxos comerciais continuam por implementar.
 
 Os documentos distinguem:
 
