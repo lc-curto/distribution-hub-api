@@ -36,7 +36,7 @@ Não tente aprender toda a tecnologia antes de começar. Estude apenas o conceit
 
 Mantenha três grupos para não tentar fazer tudo ao mesmo tempo:
 
-- **Agora:** uma única tarefa pequena. Atualmente: modelar o domínio e preparar o primeiro fluxo de persistência.
+- **Agora:** implementar `tenant_users`, o vínculo entre usuários e empresas, com papel e estado. Os modelos `User` e `Tenant` e as respetivas migrations já existem; a associação ainda não.
 - **Depois:** as próximas duas ou três tarefas da fase atual.
 - **Mais tarde:** ideias, melhorias e módulos que ainda não são necessários para o primeiro fluxo.
 
@@ -180,34 +180,27 @@ Antes de começar, explique em uma frase: “o ambiente virtual separa as depend
 
 - [x] Confirmar o SQL gerado pela migration com `--sql`.
 
-### 1.2 Primeiro modelo
+### 1.2 Modelos de usuário e empresa
 
-**Exemplo:** a mesma pessoa pode estar na empresa A como `ADMIN` e na empresa B como `OPERATOR`. Isso mostra por que o papel fica em `tenant_users`, e não diretamente em `users`. Teste também que o mesmo usuário não pode ter duas associações iguais com a mesma empresa.
+**Estado: parcialmente concluído.** O modelo `User`, o modelo `Tenant` e migrations para `users` e `tenants` já existem no repositório. Também existe `tests/test_tenant.py`, com testes do modelo e persistência de uma empresa. A API ainda não expõe endpoints comerciais para estes modelos.
 
+- [x] Criar o modelo `User` — conta global do usuário.
+- [x] Criar migrations para a tabela `users`, incluindo a evolução do modelo e a unicidade do e-mail sem distinguir maiúsculas/minúsculas.
+- [x] Criar o modelo `Tenant` — empresa.
+- [x] Criar migration para a tabela `tenants`.
+- [x] Criar teste de modelo e persistência de `Tenant`.
+- [ ] Confirmar localmente que todas as migrations aplicam numa base vazia e que `alembic current` coincide com `alembic heads`.
 
-Criar somente estas entidades iniciais:
+**Próximo modelo: `tenant_users`.** A mesma pessoa poderá pertencer a empresas diferentes e ter um papel diferente em cada uma. O papel não deve ficar diretamente em `users`.
 
-- [x] `users` — pessoa que acessa o sistema.
+**Estudar antes de implementar:** relacionamento muitos-para-muitos, chaves estrangeiras, constraints de unicidade, integridade referencial, enumeração de papéis e estado da associação.
 
-O modelo `User` e a migration inicial da tabela `users` foram implementados e validados.
-
-Ainda não foram implementadas:
-
-- [ ] `tenants` — empresa.
-
-- [ ] `tenant_users` — vínculo entre pessoa, empresa, papel e estado.
-
-**Estudar:** relacionamento muitos-para-muitos, chave composta ou constraint de unicidade e integridade referencial.
-
-- [ ] Definir campos mínimos.
-
-- [ ] Criar modelos SQLAlchemy.
-
-- [ ] Criar migration.
-
-- [ ] Criar dados de desenvolvimento, se necessário.
-
-- [ ] Testar criação e relacionamento dos registros.
+- [ ] Definir campos mínimos, papel e estado do vínculo.
+- [ ] Criar o modelo SQLAlchemy `TenantUser`.
+- [ ] Definir constraints para impedir associações duplicadas.
+- [ ] Criar e rever a migration.
+- [ ] Criar testes de criação, persistência, unicidade e chaves estrangeiras.
+- [ ] Aplicar migrations localmente e validar o estado do Alembic.
 
 ### 1.3 Clientes
 
@@ -226,7 +219,7 @@ Ainda não foram implementadas:
 
 - [ ] Testar que clientes pertencem a uma única empresa.
 
-**Entrega da Fase 1:** banco reproduzível por migrations, com usuários, empresas, vínculos e clientes.
+**Entrega da Fase 1:** banco reproduzível por migrations, com usuários, empresas, vínculos e clientes. Os modelos `User` e `Tenant` e as respetivas migrations já estão no repositório; `tenant_users` e `customers` continuam pendentes.
 
 **Antes de avançar:** devo conseguir apagar e recriar o banco a partir das migrations e explicar por que cada tabela existe.
 
