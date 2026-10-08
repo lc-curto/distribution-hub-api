@@ -28,8 +28,7 @@ users              identidade global da pessoa
  customers         clientes comerciais da empresa
  products          catálogo de produtos da empresa
  price_lists       listas de preços da empresa
- warehouses        locais de estoque da empresa
- stock_balances    saldo atual de produto por armazém
+ stock_balances    saldo atual de produto por empresa
  stock_movements   histórico de entradas e saídas
  orders            pedidos realizados para clientes
  order_items       produtos incluídos nos pedidos
@@ -50,10 +49,9 @@ erDiagram
     PRICE_LISTS ||--o{ PRICE_LIST_ITEMS : contains
     PRODUCTS ||--o{ PRICE_LIST_ITEMS : priced_in
 
-    TENANTS ||--o{ WAREHOUSES : owns
-    WAREHOUSES ||--o{ STOCK_BALANCES : stores
+    TENANTS ||--o{ STOCK_BALANCES : owns
     PRODUCTS ||--o{ STOCK_BALANCES : has_balance
-    WAREHOUSES ||--o{ STOCK_MOVEMENTS : records
+    TENANTS ||--o{ STOCK_MOVEMENTS : records
     PRODUCTS ||--o{ STOCK_MOVEMENTS : moves
     USERS ||--o{ STOCK_MOVEMENTS : authored
 
@@ -90,8 +88,8 @@ Representa a identidade global de uma pessoa. Não representa a relação dessa 
 |---|---:|---|
 | `id` | Sim | Chave primária. Identificador interno da pessoa. |
 | `email` | Sim | E-mail global da conta. Deve ser único. |
-| `first_name` | Sim | Nome próprio. |
-| `last_name` | Sim | Apelido ou nome de família. |
+| `first_name` | Não | Nome próprio, quando informado. |
+| `last_name` | Não | Apelido ou nome de família, quando informado. |
 | `is_active` | Sim | Indica se a conta pode ser utilizada. Valor inicial: ativo. |
 | `email_verified_at` | Não | Momento em que o e-mail foi confirmado. |
 | `last_login_at` | Não | Momento do último login registado. |
@@ -108,8 +106,9 @@ Representa a identidade global de uma pessoa. Não representa a relação dessa 
 
 ### Regras
 
-- `email` deve ser único, considerando a política definida para maiúsculas/minúsculas;
+- `email` deve ser único globalmente, sem distinguir maiúsculas de minúsculas;
 - uma conta inativa não deve conseguir autenticar-se nem executar operações protegidas;
+- `first_name` e `last_name` podem ser preenchidos posteriormente.
 - a conta pode existir sem estar associada a uma empresa;
 - o modelo atual com `id`, `email` e `created_at` é a primeira versão e deverá evoluir para esta proposta.
 
@@ -133,7 +132,7 @@ Representa uma empresa cliente da plataforma e a fronteira de isolamento dos dad
 
 - uma empresa inativa não aceita novas operações;
 - uma empresa deve manter pelo menos um `ADMIN` ativo;
-- `tax_id`, quando utilizado, deve seguir uma regra de unicidade definida para o sistema;
+- `tax_id` é opcional; quando preenchido, deve ter o formato validado e seguir uma regra de unicidade definida para o sistema;
 - os dados comerciais devem ser filtrados por `tenant_id` em todas as consultas protegidas.
 
 ---
@@ -242,7 +241,8 @@ Representa uma lista de preços pertencente a uma empresa.
 
 - uma lista pertence a uma empresa;
 - uma empresa pode possuir várias listas;
-- a política de uma única lista padrão por empresa deve ser protegida;
+- deve existir exatamente uma lista padrão ativa por empresa;
+- ao criar uma empresa, o sistema deve criar ou exigir a sua lista padrão inicial;
 - uma lista inativa não pode ser selecionada para novos pedidos;
 - os preços usados no pedido devem ser preservados no `order_items`, mesmo que a lista mude depois.
 
@@ -270,58 +270,36 @@ Representa o preço de um produto dentro de uma lista específica.
 
 ---
 
-## 4.8 `warehouses`
+## 4.8 `stock_balances`
 
-Representa um local físico ou lógico de estoque pertencente a uma empresa.
-
-| Campo | Obrigatório | Regra / finalidade |
-|---|---:|---|
-| `id` | Sim | Chave primária. |
-| `tenant_id` | Sim | Empresa proprietária. |
-| `name` | Sim | Nome do armazém. |
-| `code` | Não | Código interno do armazém. |
-| `is_active` | Sim | Indica se pode ser usado em novas operações. |
-| `created_at` | Sim | Data de criação. |
-| `updated_at` | Sim | Data da última alteração. |
-
-### Regras
-
-- um armazém pertence a uma única empresa;
-- o código, quando usado, deve ser único dentro da empresa;
-- armazém inativo conserva o histórico mas não recebe novas operações.
-
----
-
-## 4.9 `stock_balances`
-
-Representa o saldo atual de um produto num armazém. É uma visão operacional rápida, não o histórico completo.
+Representa o saldo atual de um produto dentro de uma empresa. O MVP não terá armazéns; portanto, existe uma posição de stock por combinação de empresa e produto.
 
 | Campo | Obrigatório | Regra / finalidade |
 |---|---:|---|
 | `id` | Sim | Chave primária. |
-| `warehouse_id` | Sim | FK para `warehouses`. |
+| `tenant_id` | Sim | FK para `tenants`. |
 | `product_id` | Sim | FK para `products`. |
-| `quantity` | Sim | Saldo atual. A política de saldo negativo deve ser decidida. |
+| `quantity` | Sim | Saldo atual, nunca negativo. |
 | `updated_at` | Sim | Data da última atualização do saldo. |
 
 ### Constraints e regras
 
-- `UNIQUE (warehouse_id, product_id)`;
-- armazém e produto devem pertencer à mesma empresa;
-- a alteração deve ocorrer na mesma transação do movimento de estoque;
-- a permissão para saldo negativo deve ser definida antes da implementação.
+- `UNIQUE (tenant_id, product_id)`;
+- empresa e produto devem pertencer ao mesmo contexto;
+- stock negativo é proibido;
+- a alteração deve ocorrer na mesma transação da criação do movimento de stock;
+- uma saída superior à quantidade disponível deve ser bloqueada.
 
 ---
 
-## 4.10 `stock_movements`
+## 4.9 `stock_movements`
 
-Representa cada entrada, saída, ajuste ou transferência de estoque. É a fonte histórica para auditoria.
+Representa cada entrada, saída ou ajuste de stock. É a fonte histórica para auditoria.
 
 | Campo | Obrigatório | Regra / finalidade |
 |---|---:|---|
 | `id` | Sim | Chave primária. |
 | `tenant_id` | Sim | Empresa da operação. |
-| `warehouse_id` | Sim | Armazém afetado. |
 | `product_id` | Sim | Produto movimentado. |
 | `movement_type` | Sim | `IN`, `OUT` ou `ADJUSTMENT`, inicialmente. |
 | `quantity` | Sim | Quantidade positiva do movimento. |
@@ -337,11 +315,12 @@ Representa cada entrada, saída, ajuste ou transferência de estoque. É a fonte
 - correções devem gerar um novo movimento de ajuste;
 - autor, empresa, data e contexto devem ser preservados;
 - a atualização de `stock_balances` e a criação do movimento devem ser atómicas;
-- armazém, produto e utilizador devem ser válidos dentro do contexto da empresa.
+- uma saída só pode ser criada se o saldo disponível for suficiente;
+- a confirmação de um pedido deve gerar os movimentos de stock uma única vez.
 
 ---
 
-## 4.11 `orders`
+## 4.10 `orders`
 
 Representa um pedido comercial feito por um cliente.
 
@@ -351,7 +330,6 @@ Representa um pedido comercial feito por um cliente.
 | `tenant_id` | Sim | Empresa do pedido. |
 | `customer_id` | Sim | Cliente do pedido. |
 | `price_list_id` | Não | Lista usada para calcular os preços. |
-| `warehouse_id` | Não | Armazém que atenderá o pedido. |
 | `status` | Sim | Estado do pedido, por exemplo `DRAFT`, `CONFIRMED`, `CANCELLED`. |
 | `order_number` | Sim | Número legível e único dentro da empresa. |
 | `subtotal` | Sim | Soma dos itens antes de ajustes. |
@@ -370,13 +348,15 @@ Representa um pedido comercial feito por um cliente.
 - `DRAFT` pode ser editado;
 - `CONFIRMED` é uma operação comercial consolidada;
 - `CANCELLED` não pode voltar a ser usado como pedido ativo sem uma decisão explícita;
-- a confirmação deve validar cliente ativo, produtos ativos, preços válidos e estoque;
-- a confirmação e os movimentos de estoque devem ocorrer na mesma transação quando houver baixa de estoque;
-- um pedido confirmado deve preservar os valores calculados no momento da confirmação.
+- a confirmação deve validar cliente ativo, produtos ativos, preços válidos e stock;
+- a confirmação e os movimentos de stock devem ocorrer na mesma transação lógica;
+- a confirmação deve gerar os movimentos de stock uma única vez;
+- um pedido confirmado deve preservar os valores calculados no momento da confirmação;
+- um pedido pode não gerar recebível apenas em condições explícitas, como oferta ou operação sem dívida a cobrar.
 
 ---
 
-## 4.12 `order_items`
+## 4.11 `order_items`
 
 Representa cada produto dentro de um pedido. É necessário guardar um retrato do preço usado, porque o produto e a lista de preços podem mudar no futuro.
 
@@ -395,13 +375,14 @@ Representa cada produto dentro de um pedido. É necessário guardar um retrato d
 
 - um item pertence a exatamente um pedido;
 - o pedido deve ter pelo menos um item para ser confirmado;
+- um produto só pode aparecer uma vez em cada pedido;
+- se o utilizador adicionar o mesmo produto novamente, a aplicação deve agregar a quantidade à linha existente;
 - `product_id` mantém a referência do produto, mas `unit_price` e `line_total` preservam o histórico;
-- quantidades e valores monetários não podem assumir valores inválidos;
-- a política para permitir o mesmo produto em duas linhas deve ser definida: consolidar linhas ou bloquear duplicação.
+- quantidades e valores monetários não podem assumir valores inválidos.
 
 ---
 
-## 4.13 `receivables`
+## 4.12 `receivables`
 
 Representa um valor que a empresa deve receber, normalmente originado de um pedido confirmado.
 
@@ -427,7 +408,7 @@ Representa um valor que a empresa deve receber, normalmente originado de um pedi
 
 ---
 
-## 4.14 `payments`
+## 4.13 `payments`
 
 Representa um pagamento ou parte de um pagamento aplicado a um recebível.
 
@@ -462,14 +443,13 @@ Representa um pagamento ou parte de um pagamento aplicado a um recebível.
 | `tenants` → `price_lists` | 1:N | Uma empresa possui várias listas. |
 | `price_lists` → `price_list_items` | 1:N | Uma lista contém vários preços. |
 | `products` → `price_list_items` | 1:N | Um produto pode aparecer em várias listas. |
-| `tenants` → `warehouses` | 1:N | Uma empresa pode ter vários armazéns. |
-| `warehouses` + `products` → `stock_balances` | N:M resolvido | O saldo é por combinação de armazém e produto. |
-| `warehouses` + `products` → `stock_movements` | N:M histórico | Cada movimento liga produto e armazém. |
+| `tenants` + `products` → `stock_balances` | N:M resolvido | O saldo é por combinação de empresa e produto. |
+| `tenants` + `products` → `stock_movements` | N:M histórico | Cada movimento liga empresa e produto. |
 | `tenants` → `orders` | 1:N | Uma empresa recebe vários pedidos. |
 | `customers` → `orders` | 1:N | Um cliente pode fazer vários pedidos. |
 | `orders` → `order_items` | 1:N | Um pedido contém uma ou mais linhas. |
 | `products` → `order_items` | 1:N | Um produto pode aparecer em vários pedidos. |
-| `orders` → `receivables` | 1:N ou 1:1 | Depende do suporte a parcelas. A proposta inicial permite várias parcelas. |
+| `orders` → `receivables` | 1:N ou 0:N | Um pedido pode ter várias prestações ou nenhum recebível em condições explícitas. |
 | `receivables` → `payments` | 1:N | Um recebível pode ter pagamentos parciais. |
 
 ## 6. Regras de integridade mais importantes
@@ -483,7 +463,6 @@ order.tenant_id
 customer.tenant_id
 product.tenant_id
 price_list.tenant_id
-warehouse.tenant_id
 ```
 
 Não basta validar que os IDs existem. É necessário validar que os IDs pertencem ao `tenant_id` ativo.
@@ -515,8 +494,8 @@ A confirmação do pedido precisa validar, na mesma operação transacional:
 - pedido com pelo menos um item;
 - produtos ativos;
 - preços válidos;
-- estoque suficiente, se a regra exigir;
-- criação dos movimentos de estoque;
+- stock suficiente;
+- criação dos movimentos de stock;
 - criação dos recebíveis, se aplicável.
 
 ## 7. O que é MVP e o que fica fora da primeira versão
@@ -528,8 +507,7 @@ A confirmação do pedido precisa validar, na mesma operação transacional:
 - clientes;
 - produtos;
 - listas de preços;
-- armazéns;
-- saldo e histórico de estoque;
+- saldo e histórico de stock por empresa e produto;
 - pedidos e itens;
 - recebíveis e pagamentos;
 - isolamento por empresa;
@@ -553,22 +531,28 @@ A confirmação do pedido precisa validar, na mesma operação transacional:
 - multi-moeda avançada;
 - integrações bancárias.
 
-## 8. Decisões que precisam da tua validação
+## 8. Decisões de negócio aprovadas
 
-Antes de transformar este modelo em tabelas, precisamos decidir:
+As decisões abaixo foram validadas para o modelo do MVP:
 
-1. `User` deve exigir `first_name` e `last_name` desde o início, ou apenas `email` e estado?
-2. O e-mail deve ser único globalmente ignorando maiúsculas/minúsculas?
-3. A empresa terá `tax_id` obrigatório ou opcional?
-4. Uma empresa pode possuir várias listas padrão ou exatamente uma?
-5. O estoque pode ficar negativo?
-6. O pedido confirmado baixa estoque automaticamente?
-7. O pedido pode ser parcelado em vários recebíveis?
-8. Um pedido pode ser confirmado sem gerar recebível?
-9. O MVP terá somente `ADMIN` e `OPERATOR`?
-10. Produtos e clientes terão soft delete somente com `is_active`?
-11. O mesmo produto pode aparecer em duas linhas do mesmo pedido?
-12. O primeiro MVP precisa de armazéns ou pode começar com um estoque único por empresa?
+| Nº | Decisão | Regra a implementar |
+|---:|---|---|
+| 1 | Nome e apelido opcionais | `email` e estado da conta são obrigatórios; `first_name` e `last_name` são opcionais. |
+| 2 | E-mail único globalmente | A comparação deve ser feita sem distinção entre maiúsculas e minúsculas. |
+| 3 | `tax_id` opcional | Permitir `NULL`; validar o formato quando preenchido. |
+| 4 | Uma lista padrão por empresa | Permitir várias listas, mas manter exatamente uma lista padrão ativa por empresa. |
+| 5 | Stock negativo proibido | Bloquear saídas superiores à quantidade disponível. |
+| 6 | Confirmação baixa stock | Gerar movimentos de stock uma única vez, na mesma transação lógica da confirmação. |
+| 7 | Vários recebíveis por pedido | Um pedido pode ter várias prestações, com vencimentos e valores próprios. |
+| 8 | Confirmação sem recebível | Permitir apenas em condições explícitas, como oferta ou operação sem dívida a cobrar. |
+| 9 | Apenas `ADMIN` e `OPERATOR` | Usar estes dois perfis iniciais, com permissões verificadas no servidor. |
+| 10 | Soft delete com `is_active` | Desativar produtos e clientes sem apagar o histórico comercial. |
+| 11 | Produto não se repete no pedido | Uma linha por produto em cada pedido; novas quantidades devem ser agregadas. |
+| 12 | Stock único por empresa | Uma posição de stock por produto e empresa, sem gestão de armazéns no MVP. |
+
+Estas decisões substituem as questões em aberto da primeira versão deste documento.
+
+---
 
 ## 9. Ordem recomendada de implementação
 
@@ -580,7 +564,7 @@ Depois da validação do modelo:
 4. criar `customers`;
 5. criar `products`;
 6. criar `price_lists` e `price_list_items`;
-7. criar `warehouses`, `stock_balances` e `stock_movements`;
+7. criar `stock_balances` e `stock_movements` por empresa e produto;
 8. criar `orders` e `order_items`;
 9. criar `receivables` e `payments`;
 10. criar migrations pequenas e verificáveis;
