@@ -1,6 +1,6 @@
 # Domínio e regras essenciais
 
-> O domínio abaixo é especificado. A entidade `User` já possui um modelo SQLAlchemy e uma migration inicial; as restantes entidades ainda não foram implementadas.
+> O domínio de negócio abaixo é, em grande parte, especificado e ainda não exposto por endpoints. Os modelos SQLAlchemy `User` e `Tenant` e as migrations de `users` e `tenants` já existem. A associação `tenant_users`, os clientes e os restantes módulos comerciais continuam por implementar.
 
 ## Conceitos
 
