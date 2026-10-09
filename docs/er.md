@@ -74,6 +74,188 @@ Legenda:
 - `o{` significa zero ou muitos;
 - `|{` significa um ou muitos.
 
+
+## 3.1 Diagramas por domínio
+
+Os diagramas seguintes complementam o diagrama geral e facilitam a revisão por área funcional. São diagramas conceptuais: os atributos e as constraints devem ser confirmados antes da implementação.
+
+**Convenção multi-tenant:** `users` é uma identidade global e não possui `tenant_id`. `tenants` é a entidade que delimita cada empresa. As entidades comerciais pertencem a um tenant e devem incluir `tenant_id`, conforme a definição de cada entidade. As entidades de referência aparecem apenas com a PK quando os seus atributos não são relevantes para o domínio em análise.
+
+### 3.1.1 Acesso
+
+```mermaid
+erDiagram
+    TENANTS ||--o{ TENANT_USERS : has_members
+    USERS ||--o{ TENANT_USERS : belongs_to
+
+    TENANTS {
+        uuid id PK
+        string name
+    }
+    USERS {
+        uuid id PK
+        string email UK
+    }
+    TENANT_USERS {
+        uuid tenant_id PK, FK
+        uuid user_id PK, FK
+        string role
+        string status
+    }
+```
+
+Constraints: `UNIQUE (tenant_id, user_id)` ou PK composta `(tenant_id, user_id)`; `email` único globalmente sem distinção entre maiúsculas e minúsculas. A função (`role`) pertence à associação com a empresa, não à identidade global.
+
+### 3.1.2 Catálogo e preços
+
+```mermaid
+erDiagram
+    TENANTS ||--o{ PRODUCTS : owns
+    TENANTS ||--o{ PRICE_LISTS : owns
+    PRICE_LISTS ||--o{ PRICE_LIST_ITEMS : contains
+    PRODUCTS ||--o{ PRICE_LIST_ITEMS : priced_in
+
+    PRODUCTS {
+        uuid id PK
+        uuid tenant_id FK
+        string sku
+        string name
+        string unit
+        boolean is_active
+    }
+    PRICE_LISTS {
+        uuid id PK
+        uuid tenant_id FK
+        string name
+        string currency
+        boolean is_default
+        boolean is_active
+    }
+    PRICE_LIST_ITEMS {
+        uuid id PK
+        uuid price_list_id FK
+        uuid product_id FK
+        decimal unit_price
+    }
+```
+
+Constraints: `UNIQUE (tenant_id, sku)`; `UNIQUE (price_list_id, product_id)`; `unit_price >= 0`. A lista e o produto referenciados por um item de preço têm de pertencer ao mesmo tenant. Se `price_list_items` tiver `tenant_id` na implementação, esse valor também deve ser coerente com ambos os registos relacionados.
+
+### 3.1.3 Vendas
+
+```mermaid
+erDiagram
+    TENANTS ||--o{ CUSTOMERS : owns
+    TENANTS ||--o{ ORDERS : owns
+    CUSTOMERS ||--o{ ORDERS : places
+    USERS ||--o{ ORDERS : creates
+    PRICE_LISTS o|--o{ ORDERS : prices
+    ORDERS ||--|{ ORDER_ITEMS : contains
+    PRODUCTS ||--o{ ORDER_ITEMS : references
+
+    CUSTOMERS {
+        uuid id PK
+        uuid tenant_id FK
+        string name
+        string tax_id
+    }
+    ORDERS {
+        uuid id PK
+        uuid tenant_id FK
+        uuid customer_id FK
+        uuid created_by FK
+        uuid price_list_id FK
+        string order_number
+        string status
+        decimal total
+    }
+    ORDER_ITEMS {
+        uuid id PK
+        uuid order_id FK
+        uuid product_id FK
+        int quantity
+        decimal unit_price
+        decimal discount
+        decimal vat_rate
+        decimal line_total
+    }
+```
+
+`vat_rate` em `ORDER_ITEMS` representa a taxa aplicada no momento da operação, caso o modelo fiscal adotado use taxa por linha. `unit_price`, `discount`, `vat_rate` e `line_total` devem preservar os valores calculados para a venda, independentemente de alterações posteriores no catálogo ou na lista de preços.
+
+Constraints recomendadas: `UNIQUE (tenant_id, order_number)` e `UNIQUE (order_id, product_id)`; `quantity > 0`; valores monetários e taxa dentro dos limites definidos pelo domínio. Cliente, lista de preços, produtos e pedido têm de pertencer ao mesmo tenant.
+
+### 3.1.4 Stock
+
+```mermaid
+erDiagram
+    TENANTS ||--o{ STOCK_BALANCES : owns
+    TENANTS ||--o{ STOCK_MOVEMENTS : records
+    PRODUCTS ||--o{ STOCK_BALANCES : has_balance
+    PRODUCTS ||--o{ STOCK_MOVEMENTS : moves
+    USERS ||--o{ STOCK_MOVEMENTS : registers
+
+    STOCK_BALANCES {
+        uuid id PK
+        uuid tenant_id FK
+        uuid product_id FK
+        int quantity
+    }
+    STOCK_MOVEMENTS {
+        uuid id PK
+        uuid tenant_id FK
+        uuid product_id FK
+        uuid created_by FK
+        string movement_type
+        int quantity
+        datetime created_at
+    }
+```
+
+O MVP mantém um saldo por produto e tenant, sem armazéns. Aplicar `UNIQUE (tenant_id, product_id)` em `stock_balances`, impedir saldos negativos e atualizar saldo e movimento na mesma transação. Os movimentos são histórico auditável; correções devem ser registadas como novos movimentos.
+
+### 3.1.5 Financeiro
+
+```mermaid
+erDiagram
+    TENANTS ||--o{ RECEIVABLES : owns
+    ORDERS ||--o{ RECEIVABLES : generates
+    RECEIVABLES ||--o{ PAYMENTS : settled_by
+    USERS ||--o{ PAYMENTS : registers
+
+    RECEIVABLES {
+        uuid id PK
+        uuid tenant_id FK
+        uuid order_id FK
+        uuid customer_id FK
+        decimal original_amount
+        decimal paid_amount
+        date due_date
+        string status
+    }
+    PAYMENTS {
+        uuid id PK
+        uuid tenant_id FK
+        uuid receivable_id FK
+        uuid recorded_by FK
+        decimal amount
+        datetime paid_at
+        string payment_method
+    }
+```
+
+Este desenho pressupõe que cada pagamento é aplicado a um único recebível e que um recebível pode ser liquidado por vários pagamentos parciais. Se um pagamento puder liquidar vários recebíveis, introduzir `payment_allocations` para representar a associação muitos-para-muitos. Pagamentos confirmados não devem ser apagados fisicamente; anulações têm de ser rastreáveis.
+
+### Legenda dos diagramas
+
+- `||`: exatamente um;
+- `o|`: zero ou um;
+- `o{`: zero ou muitos;
+- `|{`: um ou muitos;
+- `PK`: chave primária; `FK`: chave estrangeira; `UK`: unicidade.
+
+A presença de `tenant_id` num diagrama não substitui as constraints que garantem que as referências relacionadas pertencem ao mesmo tenant.
+
 ## 4. Entidades e atributos
 
 Os tipos abaixo são conceptuais. Os tipos concretos de SQLAlchemy/PostgreSQL serão definidos durante a implementação.
@@ -266,7 +448,8 @@ Representa o preço de um produto dentro de uma lista específica.
 - `UNIQUE (price_list_id, product_id)`;
 - o preço deve ser maior ou igual a zero;
 - a lista e o produto devem pertencer à mesma empresa;
-- um produto sem preço válido não pode ser utilizado num pedido que dependa dessa lista.
+- um produto sem preço válido não pode ser utilizado num pedido que dependa dessa lista;
+- para garantir esta regra também na base de dados, considerar `UNIQUE (tenant_id, id)` em `price_lists` e `products`, e FKs compostas a partir de `price_list_items` (incluindo `tenant_id` nessa tabela, se for adotado).
 
 ---
 
@@ -367,6 +550,7 @@ Representa cada produto dentro de um pedido. É necessário guardar um retrato d
 | `product_id` | Sim | FK para `products`. |
 | `quantity` | Sim | Quantidade pedida, maior que zero. |
 | `unit_price` | Sim | Preço unitário aplicado no momento do pedido. |
+| `vat_rate` | A decidir conforme o modelo fiscal | Taxa de IVA aplicada à linha, guardada como snapshot quando aplicável. |
 | `discount` | Sim | Desconto do item, se existir. |
 | `line_total` | Sim | Total calculado da linha. |
 | `created_at` | Sim | Data de criação do item. |
@@ -374,6 +558,7 @@ Representa cada produto dentro de um pedido. É necessário guardar um retrato d
 ### Regras
 
 - um item pertence a exatamente um pedido;
+- o pedido e o produto referenciados devem pertencer ao mesmo tenant; aplicar FK composta quando o esquema incluir `tenant_id` em `order_items`;
 - o pedido deve ter pelo menos um item para ser confirmado;
 - um produto só pode aparecer uma vez em cada pedido;
 - se o utilizador adicionar o mesmo produto novamente, a aplicação deve agregar a quantidade à linha existente;
@@ -463,9 +648,16 @@ order.tenant_id
 customer.tenant_id
 product.tenant_id
 price_list.tenant_id
+order_item.tenant_id (se este campo fizer parte do esquema final)
+receivable.tenant_id
+payment.tenant_id
 ```
 
 Não basta validar que os IDs existem. É necessário validar que os IDs pertencem ao `tenant_id` ativo.
+
+A validação na aplicação é necessária, mas não deve ser a única barreira de integridade. Quando as relações atravessam entidades do mesmo tenant, preferir constraints no PostgreSQL que impeçam referências cruzadas entre empresas. Uma abordagem é criar chaves únicas compostas como `UNIQUE (tenant_id, id)` nas tabelas referenciadas e FKs compostas, por exemplo `(tenant_id, customer_id)` para `(customers.tenant_id, customers.id)`. Aplicar o mesmo princípio a produtos, listas de preços, pedidos, recebíveis e restantes relações multi-tenant, conforme o esquema final.
+
+`tenant_id` deve ser obtido do contexto de autorização do utilizador no servidor; não deve ser aceite como prova de autorização apenas por ter sido enviado pelo cliente HTTP. Avaliar também Row-Level Security (RLS) no PostgreSQL como camada adicional, sem substituir a autorização da API nem as constraints relacionais.
 
 ### 6.2 Autorização
 
@@ -571,3 +763,17 @@ Depois da validação do modelo:
 11. testar as constraints e as regras de isolamento.
 
 A primeira etapa de implementação deve continuar a ser pequena: `users`, `tenants` e `tenant_users`. As restantes entidades podem estar desenhadas agora sem serem implementadas todas de uma vez.
+
+## 10. Orientações de implementação para integridade multi-tenant
+
+As decisões de negócio aprovadas nas secções anteriores mantêm-se. As recomendações desta secção orientam a implementação e devem ser confirmadas durante a revisão técnica do schema.
+
+1. **Chaves e FKs compostas:** para relações entre entidades comerciais, considerar `UNIQUE (tenant_id, id)` na tabela referenciada e uma FK composta `(tenant_id, foreign_id)` na tabela dependente. Isto impede que uma linha de um tenant referencie, por engano, uma entidade de outro tenant.
+2. **`tenant_id` nas tabelas de associação:** decidir explicitamente se `price_list_items` e `order_items` armazenam `tenant_id`. Se armazenarem, a coluna deve ser consistente com as entidades pai e protegida por constraints. Se não armazenarem, as relações continuam a ter de garantir integridade multi-tenant através de FKs compostas ou outra estratégia relacional equivalente.
+3. **Utilizadores que executam operações:** `created_by`, `confirmed_by`, `recorded_by` e `created_by` em movimentos referenciam `users` globalmente. A autorização deve ainda verificar que o utilizador tem associação ativa ao tenant da operação; a FK a `users` por si só não comprova essa autorização.
+4. **Transações:** confirmar pedido, baixar stock, criar movimentos e gerar recebíveis deve ser tratado como uma unidade transacional coerente, com proteção contra dupla confirmação e concorrência no stock.
+5. **Valores históricos:** guardar snapshots dos valores comerciais e fiscais aplicados. A taxa de IVA por linha (`order_items.vat_rate`) é uma proposta que deve ser confirmada de acordo com a política fiscal do produto e os requisitos de faturação.
+6. **Pagamentos:** o modelo atual associa um pagamento a um recebível. Adotar `payment_allocations` apenas se existir requisito para um pagamento liquidar vários recebíveis.
+7. **Armazéns:** continuam fora do MVP aprovado. Se forem introduzidos, a unicidade do saldo passa a incluir `warehouse_id`, e os movimentos devem identificar o armazém ou os armazéns envolvidos.
+8. **Segurança em profundidade:** filtrar por tenant em todas as operações protegidas; testar acessos cruzados entre tenants; avaliar RLS como defesa adicional no PostgreSQL.
+Estas recomendações não significam que as tabelas ou constraints já estejam implementadas. Antes de criar migrations, comparar a proposta com os modelos SQLAlchemy, migrations Alembic e regras efetivamente aprovadas para o MVP.
