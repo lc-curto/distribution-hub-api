@@ -1,114 +1,100 @@
-# Roadmap de aprendizagem e desenvolvimento
+# Learning and Development Roadmap
 
-Este documento é o **to-do principal** do projeto. A regra é simples: antes de implementar uma etapa, estudar o mínimo necessário para entender o que está sendo feito e por quê.
+This document is the project's **main to-do list**. Before implementing a task, study enough to understand what is being done and why.
 
-Não avance por quantidade de código. Avance quando conseguir explicar a etapa com suas próprias palavras.
+Do not measure progress by the amount of code written. Move forward when you can explain the task in your own words.
 
-## Como usar este documento
+## How to Use This Document
 
-1. Trabalhe em apenas uma tarefa marcada como **Agora**.
+1. Work on only one task marked as **Now**.
+2. Complete the recommended study before writing code.
+3. Record questions and unfamiliar terms.
+4. Implement a small version.
+5. Test manually and run automated tests where applicable.
+6. Mark a task complete only when its acceptance criteria are satisfied.
+7. If a task seems too large, break it down before starting.
 
-1. Faça o estudo indicado antes de escrever código.
+## How to Study a Task
 
-1. Anote dúvidas e termos novos.
+For each task, follow this short cycle:
 
-1. Implemente uma versão pequena.
+1. **Understand:** explain what the technology does and which problem it solves.
+2. **Observe:** read the official documentation and review a minimal example.
+3. **Practice:** complete an isolated exercise before integrating it into the project.
+4. **Explain:** describe the exercise in your own words.
+5. **Apply:** only then make the change in Distribution Hub.
 
-1. Teste manualmente e com teste automatizado quando aplicável.
+Do not try to learn the entire technology before starting. Study only what is needed for the current task and record what can be learned later.
 
-1. Marque a tarefa somente quando o critério de conclusão estiver satisfeito.
+## Work Queue
 
-1. Se uma tarefa parecer grande, divida-a antes de começar.
+Keep three groups to avoid working on everything at once:
 
-## Como estudar uma tarefa
+- **Now:** validate that all database migrations can be applied to a fresh database, then review the customer domain requirements.
+- **Next:** define the `Customer` fields and business rules, then implement its SQLAlchemy model, migration, and persistence tests.
+- **Later:** improvements and commercial modules that are not yet needed for the first end-to-end workflow.
 
-Para cada item, use este ciclo curto:
+When a task is completed, move only the next task to **Now**. Do not reorganize the entire project every week.
 
-1. **Entender:** escreva o que a tecnologia faz e qual problema resolve.
-2. **Observar:** leia a documentação oficial e veja um exemplo mínimo.
-3. **Praticar:** faça um exercício isolado, sem misturar ainda com o projeto.
-4. **Explicar:** descreva o exercício com suas próprias palavras.
-5. **Aplicar:** só então faça a alteração no Distribution Hub.
+## Recommended Pace
 
-Não tente aprender toda a tecnologia antes de começar. Estude apenas o conceito necessário para a tarefa atual e registre o que ficou para depois.
+Complete three study sessions per week, each lasting 60–90 minutes:
 
-## Fila de trabalho
+- **Session A — Study:** review the concept, official documentation, and a small example.
+- **Session B — Implement:** make one small, functional change.
+- **Session C — Test and Review:** fix issues, explain what you learned, and update this file.
 
-Mantenha três grupos para não tentar fazer tudo ao mesmo tempo:
+If you have less time, reduce the task size rather than skipping the study.
 
-- **Agora:** implementar `tenant_users`, o vínculo entre usuários e empresas, com papel e estado. Os modelos `User` e `Tenant` e as respetivas migrations já existem; a associação ainda não.
-- **Depois:** as próximas duas ou três tarefas da fase atual.
-- **Mais tarde:** ideias, melhorias e módulos que ainda não são necessários para o primeiro fluxo.
+## Completion Criteria
 
-Quando terminar uma tarefa, mova apenas a próxima para **Agora**. Não reorganize o projeto inteiro toda semana.
+A task is complete only when:
 
-## Ritmo recomendado
-
-Faça três sessões semanais de 60 a 90 minutos:
-
-- **Sessão A — estudar:** conceito, documentação oficial e exemplo pequeno.
-
-- **Sessão B — implementar:** uma alteração pequena e funcional.
-
-- **Sessão C — testar e revisar:** corrigir, explicar o que aprendeu e atualizar este arquivo.
-
-Se tiver menos tempo, reduza o tamanho da tarefa, não pule o estudo.
-
-## Regra de conclusão
-
-Uma etapa só está concluída quando:
-
-- [ ] consigo explicar o que implementei sem copiar a explicação;
-
-- [ ] sei em quais arquivos a mudança foi feita;
-
-- [ ] consigo executar a funcionalidade localmente;
-
-- [ ] existe teste ou verificação manual registrada;
-
-- [ ] não deixei dúvidas importantes escondidas;
-
-- [ ] atualizei a documentação quando o comportamento mudou.
+- [ ] I can explain what I implemented without copying an explanation.
+- [ ] I know which files were changed.
+- [ ] I can run the functionality locally.
+- [ ] A test or manual verification has been recorded.
+- [ ] I have documented any important unresolved questions.
+- [ ] I updated the documentation when behavior changed.
 
 ---
+## Phase 0 — Prepare the Study Environment
 
-## Fase 0 — Preparar o estudo e o ambiente
+**Objective:** Run the API locally before implementing any features.
 
-**Objetivo:** deixar a API executando no seu computador antes de criar qualquer funcionalidade.
+### Executable Steps
 
-### Passo a passo executável
-
-Faça um passo por vez, confirmando o resultado antes de continuar:
+Complete one step at a time and verify the result before continuing:
 
 ```bash
-# 1. Entre na pasta do repositório
+# 1. Navigate to the repository
 cd caminho/para/distribution-hub-api
 
-# 2. Confira as ferramentas
+# 2. Check the required tools
 python3 --version
 git --version
 docker --version
 docker compose version
 
-# 3. Crie e ative um ambiente Python isolado
+# 3. Create and activate a virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
 
-# 4. Instale as dependências do projeto
+# 4. Install project dependencies
 python -m pip install --upgrade pip
 pip install -e ".[dev]"
 
-# 5. Crie sua configuração local
+# 5. Create the local configuration
 cp .env.example .env
 
-# 6. Inicie somente o PostgreSQL local
+# 6. Start only the local PostgreSQL service
 docker compose up -d postgres
 
-# 7. Inicie a API; mantenha este terminal aberto
+# 7. Start the API and keep this terminal open
 uvicorn app.main:app --reload
 ```
 
-Abra outro terminal, ative o ambiente novamente e verifique:
+Open another terminal, activate the environment again, and verify:
 
 ```bash
 cd caminho/para/distribution-hub-api
@@ -117,338 +103,327 @@ curl http://127.0.0.1:8000/health
 pytest
 ```
 
-**Resultado esperado:** o `curl` retorna `{"status":"ok"}` e o teste passa. Depois abra `http://127.0.0.1:8000/docs` para ver a documentação automática da API.
+**Expected result:** `curl` returns `{"status":"ok"}` and the tests pass. Then open `http://127.0.0.1:8000/docs` to view the automatic API documentation.
 
-**Se algo falhar:** copie a mensagem de erro para suas notas; não tente corrigir várias coisas ao mesmo tempo. Primeiro identifique se o problema é Python, dependência, Docker, banco ou API.
+**If something fails:** copy the error message into your notes. Do not try to fix several things at once. First identify whether the problem involves Python, dependencies, Docker, the database, or the API.
 
-### Exemplo de estudo
+### Study Example
 
-Antes de começar, explique em uma frase: “o ambiente virtual separa as dependências deste projeto das dependências do meu computador”. Depois faça o mesmo para Docker Compose, FastAPI, endpoint, teste e migration.
-
-
-### Estudar antes
-
-- [ ] Revisar Git: branch, commit, diff, restore e log.
-
-- [ ] Revisar Python: ambiente virtual, imports, funções, classes e exceções.
-
-- [ ] Revisar HTTP: request, response, métodos, status codes e JSON.
-
-- [ ] Entender o que são API, backend, frontend, banco de dados e migration.
-
-- [ ] Ler o README e [arquitetura](architecture.md).
-
-### Fazer
-
-- [x] Clonar e executar a API localmente.
-
-- [x] Executar `GET /health`.
-
-- [x] Executar os testes existentes.
-
-- [x] Criar uma branch de trabalho para a primeira funcionalidade.
-
-- [x] Registrar dúvidas em uma seção pessoal de notas.
-
-**Entrega:** consigo iniciar a API, chamar `/health` e explicar o fluxo básico.
-
-**Antes de avançar:** devo saber onde ficam o código da API, os testes, as configurações e o comando para executar o projeto.
-
----
-
-## Fase 1 — Banco de dados e persistência
-
-> Não criar todo o banco futuro. Criar somente o necessário para o primeiro fluxo.
-
-### 1.1 PostgreSQL e migrations
-
-**Exemplo:** criar uma tabela mínima `users` com `id`, `email` e `created_at`. Primeiro foi criado o modelo, depois gerada a migration, aplicada a migration e confirmada a tabela no PostgreSQL.
-
-**Estado:** concluído.
-
-**Estudar:** tabelas, colunas, chaves primárias, chaves estrangeiras, índices, constraints, transações, SQLAlchemy e Alembic.
-
-- [x] Entender como o PostgreSQL inicia no Docker Compose.
-
-- [x] Entender a diferença entre modelo Python, tabela e migration.
-
-- [x] Criar uma migration simples e saber revertê-la.
-
-- [x] Verificar a tabela criada diretamente no banco.
-
-- [x] Confirmar a utilização de `upgrade` e `downgrade`.
-
-- [x] Confirmar o SQL gerado pela migration com `--sql`.
-
-### 1.2 Modelos de usuário e empresa
-
-**Estado: parcialmente concluído.** O modelo `User`, o modelo `Tenant` e migrations para `users` e `tenants` já existem no repositório. Também existe `tests/test_tenant.py`, com testes do modelo e persistência de uma empresa. A API ainda não expõe endpoints comerciais para estes modelos.
-
-- [x] Criar o modelo `User` — conta global do usuário.
-- [x] Criar migrations para a tabela `users`, incluindo a evolução do modelo e a unicidade do e-mail sem distinguir maiúsculas/minúsculas.
-- [x] Criar o modelo `Tenant` — empresa.
-- [x] Criar migration para a tabela `tenants`.
-- [x] Criar teste de modelo e persistência de `Tenant`.
-- [ ] Confirmar localmente que todas as migrations aplicam numa base vazia e que `alembic current` coincide com `alembic heads`.
-
-**Próximo modelo: `tenant_users`.** A mesma pessoa poderá pertencer a empresas diferentes e ter um papel diferente em cada uma. O papel não deve ficar diretamente em `users`.
-
-**Estudar antes de implementar:** relacionamento muitos-para-muitos, chaves estrangeiras, constraints de unicidade, integridade referencial, enumeração de papéis e estado da associação.
-
-- [ ] Definir campos mínimos, papel e estado do vínculo.
-- [ ] Criar o modelo SQLAlchemy `TenantUser`.
-- [ ] Definir constraints para impedir associações duplicadas.
-- [ ] Criar e rever a migration.
-- [ ] Criar testes de criação, persistência, unicidade e chaves estrangeiras.
-- [ ] Aplicar migrations localmente e validar o estado do Alembic.
-
-### 1.3 Clientes
-
-**Exemplo:** criar o cliente “Loja Rosa” na empresa A. Ele pode ser consultado por usuários autorizados da empresa A, mas não aparece para usuários da empresa B. Ao inativá-lo, ele continua no histórico e deixa de poder ser usado em pedidos novos.
+Before starting, explain in one sentence: “The virtual environment separates this project dependencies from those installed on my computer.” Do the same for Docker Compose, FastAPI, endpoint, test, and migration.
 
 
-**Estudar:** soft delete/inativação, timestamps, unicidade por empresa e modelagem de dados de cadastro.
+### Study First
 
-- [ ] Definir campos mínimos de `customers`.
+- [ ] Review Git: branch, commit, diff, restore, and log.
 
-- [ ] Relacionar cliente com empresa.
+- [ ] Review Python: virtual environments, imports, functions, classes, and exceptions.
 
-- [ ] Garantir que `customer_code` seja único dentro da empresa quando usado.
+- [ ] Review HTTP: requests, responses, methods, status codes, and JSON.
 
-- [ ] Criar migration.
+- [ ] Understand APIs, backends, frontends, databases, and migrations.
 
-- [ ] Testar que clientes pertencem a uma única empresa.
+- [ ] Read the README and [architecture](architecture.md).
 
-**Entrega da Fase 1:** banco reproduzível por migrations, com usuários, empresas, vínculos e clientes. Os modelos `User` e `Tenant` e as respetivas migrations já estão no repositório; `tenant_users` e `customers` continuam pendentes.
+### Complete
 
-**Antes de avançar:** devo conseguir apagar e recriar o banco a partir das migrations e explicar por que cada tabela existe.
+- [x] Clone and run the API locally.
+
+- [x] Call `GET /health`.
+
+- [x] Run the existing tests.
+
+- [x] Create a working branch for the first feature.
+
+- [x] Record questions in personal notes.
+
+**Deliverable:** I can start the API, call `/health`, and explain the basic request flow.
+
+**Before proceeding:** I must know where the API code, tests, and configuration are located, and how to run the project.
 
 ---
 
-## Fase 2 — Backend básico
+## Phase 1 — Database and Persistence
 
-### 2.1 Estrutura da API
+> Do not build the entire future database. Implement only what is needed for the first workflow.
 
-**Exemplo:** criar primeiro um endpoint `GET /customers` que retorna uma lista vazia. Depois separar o schema da resposta, a rota e a consulta ao banco. O objetivo inicial não é ter um CRUD completo, mas entender o caminho “requisição → validação → regra → banco → resposta”.
+### 1.1 PostgreSQL and Migrations
+
+**Example:** Create a minimal `users` table with `id`, `email`, and `created_at`. The model was created first, followed by the migration, migration execution, and verification of the table in PostgreSQL.
+
+**Status:** Completed.
+
+**Study:** Tables, columns, primary keys, foreign keys, indexes, constraints, transactions, SQLAlchemy, and Alembic.
+
+- [x] Understand how PostgreSQL starts through Docker Compose.
+- [x] Understand the difference between a Python model, a database table, and a migration.
+- [x] Create a simple migration and understand how to reverse it.
+- [x] Verify the created table directly in the database.
+- [x] Understand `upgrade` and `downgrade`.
+- [x] Review the SQL generated by a migration using `--sql`.
+
+### 1.2 User, Tenant, and Membership Models
+
+**Status:** The `User`, `Tenant`, and `TenantUser` SQLAlchemy models and their migrations exist in the repository. Tests cover tenant model persistence. The API does not yet expose commercial endpoints for these models.
+
+- [x] Create the `User` model for global user accounts.
+- [x] Create migrations for `users`, including case-insensitive email uniqueness.
+- [x] Create the `Tenant` model for organizations.
+- [x] Create the migration for `tenants`.
+- [x] Add model and persistence tests for `Tenant`.
+- [x] Create the `TenantUser` model for the user–tenant membership.
+- [x] Add role and access status to the membership.
+- [x] Add a uniqueness constraint to prevent duplicate memberships.
+- [x] Create and review the `tenant_users` migration.
+- [x] Add tests for membership persistence and constraints.
+- [ ] Verify that all migrations can be applied to a fresh database and that `alembic current` matches `alembic heads`.
+
+**Key concept:** A user may belong to multiple tenants and have a different role in each. The role belongs to the membership, not to the global `users` record.
+
+**Study:** Many-to-many relationships, foreign keys, uniqueness constraints, referential integrity, roles, and membership status.
+
+### 1.3 Customers
+
+**Example:** Create customer `Loja Rosa` in Tenant A. Authorized users in Tenant A may access it, but users in Tenant B must not. When the customer is deactivated, the record remains available for historical reference but cannot be used in new orders.
+
+**Study:** Soft deletion and deactivation, timestamps, tenant-scoped uniqueness, and customer data modeling.
+
+- [ ] Define the minimum required and optional fields for `Customer`.
+- [ ] Define the relationship between `Customer` and `Tenant`.
+- [ ] Decide whether `customer_code` is required; if used, make it unique within the tenant.
+- [ ] Define customer deactivation and reactivation rules.
+- [ ] Create the SQLAlchemy model and migration.
+- [ ] Add tests for persistence, tenant ownership, and relevant constraints.
+- [ ] Verify that customers cannot be accessed across tenants.
+
+**Phase 1 deliverable:** A database that can be recreated through migrations, with users, tenants, memberships, and customers.
+
+**Before proceeding:** I must be able to recreate the database from migrations and explain why each table exists.
+
+---
+## Phase 2 — Backend Fundamentals
+
+### 2.1 API Structure
+
+**Example:** First create a `GET /customers` endpoint that returns an empty list. Then separate the response schema, route, and database query. The initial goal is not a complete CRUD implementation, but understanding the flow “request → validation → business rule → database → response”.
 
 
-**Estudar:** FastAPI, dependências, Pydantic, routers, schemas e separação entre rota, serviço e persistência.
+**Study:** FastAPI, dependencies, Pydantic, routers, schemas, and separation between routes, services, and persistence.
 
-- [ ] Entender o caminho de uma requisição até o banco.
+- [ ] Understand how a request reaches the database.
 
-- [ ] Definir uma organização simples de módulos.
+- [ ] Define a simple module structure.
 
-- [ ] Criar schemas de entrada e saída.
+- [ ] Create input and output schemas.
 
-- [ ] Aprender a validar dados e retornar erros HTTP claros.
+- [ ] Learn to validate data and return clear HTTP errors.
 
-### 2.2 Identidade de desenvolvimento
+### 2.2 Development Identity
 
-**Exemplo:** em desenvolvimento, usar uma identidade fixa e explícita, como `dev-user-a`, somente para os testes. Uma requisição sem essa identidade deve receber erro. Essa solução serve para aprender autorização; não deve ser apresentada como autenticação de produção.
-
-
-> OAuth/OIDC ainda precisa de decisão. Não bloquear o aprendizado com uma integração definitiva.
-
-**Estudar:** autenticação versus autorização, usuário atual, sessão/token e princípio do menor privilégio.
-
-- [ ] Definir um mecanismo temporário apenas para desenvolvimento/testes.
-
-- [ ] Deixar explícito no código que não é solução de produção.
-
-- [ ] Obter o usuário atual em uma dependência da API.
-
-- [ ] Recusar requisições sem identidade.
-
-### 2.3 Empresa ativa e autorização
-
-**Exemplo:** o usuário A pertence às empresas 1 e 2. Ao consultar clientes da empresa 1, vê apenas clientes da empresa 1. Se tentar trocar o identificador para empresa 2 sem ter autorização, a API recusa. Escreva esse caso como teste negativo antes do código.
+**Example:** During development, use a fixed, explicit identity such as `dev-user-a` for tests only. A request without this identity must be rejected. This approach is for learning authorization and must not be presented as production authentication.
 
 
-**Estudar:** autorização por recurso, isolamento multiempresa e testes negativos.
+> OAuth/OIDC still requires a decision. Do not block learning on a final integration.
 
-- [ ] Validar que o usuário pertence à empresa.
+**Study:** authentication versus authorization, current user, session/token, and the principle of least privilege.
 
-- [ ] Validar papel dentro da empresa correta.
+- [ ] Define a temporary mechanism for development and testing only.
 
-- [ ] Definir como a empresa ativa chega à API.
+- [ ] Make it explicit in the code that this is not a production solution.
 
-- [ ] Impedir acesso usando apenas um ID de empresa enviado pelo cliente.
+- [ ] Resolve the current user through an API dependency.
 
-- [ ] Testar usuário com duas empresas e papéis diferentes.
+- [ ] Reject requests without an identity.
 
-### 2.4 CRUD de clientes
+### 2.3 Active Tenant and Authorization
 
-**Exemplo de sequência:** `POST` cria “Loja Rosa”; `GET` lista a loja; `GET /customers/{id}` consulta; `PATCH` corrige o telefone; a ação de inativação altera o estado. Teste também um ID inexistente, dados inválidos e um cliente de outra empresa.
+**Example:** User A belongs to Tenants 1 and 2. When querying Tenant 1 customers, the user sees only Tenant 1 customers. If the user changes the tenant identifier to Tenant 2 without authorization, the API rejects the request. Write this negative test before implementing the code.
 
 
-- [ ] Criar `POST /customers`.
+**Study:** resource-level authorization, multi-tenant isolation, and negative tests.
 
-- [ ] Criar `GET /customers`.
+- [ ] Verify that the user belongs to the tenant.
 
-- [ ] Criar `GET /customers/{id}`.
+- [ ] Verify the users role within the correct tenant.
 
-- [ ] Criar `PATCH /customers/{id}`.
+- [ ] Define how the active tenant is provided to the API.
 
-- [ ] Criar ação de inativação.
+- [ ] Prevent access based solely on a tenant ID supplied by the client.
 
-- [ ] Filtrar sempre pela empresa autorizada.
+- [ ] Test a user with two tenants and different roles.
 
-- [ ] Testar sucesso, validação, não encontrado e acesso cruzado.
+### 2.4 Customer CRUD
 
-**Entrega da Fase 2:** API de clientes funcionando com autorização e testes.
+**Example sequence:** `POST` creates “Loja Rosa”; `GET` lists the customer; `GET /customers/{id}` retrieves it; `PATCH` updates the phone number; and the deactivation action changes its status. Also test a nonexistent ID, invalid data, and a customer belonging to another tenant.
 
-**Antes de avançar:** devo conseguir explicar o caminho de uma requisição, validar um dado inválido e provar com teste que uma empresa não acessa os clientes de outra.
+
+- [ ] Create `POST /customers`.
+
+- [ ] Create `GET /customers`.
+
+- [ ] Create `GET /customers/{id}`.
+
+- [ ] Create `PATCH /customers/{id}`.
+
+- [ ] Create a deactivation action.
+
+- [ ] Always filter by the authorized tenant.
+
+- [ ] Test success, validation errors, not-found responses, and cross-tenant access.
+
+**Phase 2 deliverable:** A customer API with authorization and tests.
+
+**Before proceeding:** I must be able to explain the request flow, validate invalid data, and prove through a test that one tenant cannot access another tenants customers.
 
 ---
 
-## Fase 3 — Frontend inicial
+## Phase 3 — Initial Frontend
 
-### Estudar antes
+### Study First
 
-**Exemplo:** antes de criar uma tela, faça uma tela de teste que apenas busca `/health` e mostra “API online”. Assim você aprende a chamada HTTP sem misturar formulário, autenticação e banco.
-
-
-- [ ] Revisar React: componentes, props, estado e eventos.
-
-- [ ] Revisar TypeScript: tipos, interfaces e unions.
-
-- [ ] Revisar chamadas HTTP e tratamento de estados.
-
-- [ ] Entender loading, sucesso, erro e estado vazio.
-
-- [ ] Entender formulários e validação no frontend.
-
-### Implementar
-
-**Exemplo:** a primeira tela real pode apenas listar clientes. Depois adicione o formulário de criação; só depois edição e inativação. Em cada etapa, trate explicitamente carregando, sucesso, erro e lista vazia.
+**Example:** Before building a feature screen, create a test screen that fetches `/health` and displays “API online”. This teaches HTTP requests without mixing in forms, authentication, and database logic.
 
 
-- [ ] Criar tela de listagem de clientes.
+- [ ] Review React: components, props, state, and events.
 
-- [ ] Criar formulário de cliente.
+- [ ] Review TypeScript: types, interfaces, and unions.
 
-- [ ] Integrar criação com a API.
+- [ ] Review HTTP requests and state handling.
 
-- [ ] Integrar edição.
+- [ ] Understand loading, success, error, and empty states.
 
-- [ ] Integrar inativação.
+- [ ] Understand frontend forms and validation.
 
-- [ ] Exibir loading, erro, sucesso e lista vazia.
+### Implementation
 
-- [ ] Testar manualmente o fluxo completo.
-
-**Entrega da Fase 3:** usuário consegue entrar no fluxo, selecionar empresa e manter clientes pela interface.
-
-**Antes de avançar:** devo conseguir explicar como o frontend chama a API e o que acontece nos estados de carregamento, sucesso, erro e lista vazia.
-
----
-
-## Fase 4 — Próximos módulos
-
-Não iniciar esta fase antes de concluir o primeiro fluxo completo.
-
-### Catálogo e preços
-
-**Exemplo:** comece com uma categoria “Batom” e um produto “Batom Rosa” com preço decimal. Não implemente promoções, múltiplas tabelas de preço ou importação em lote nesta primeira versão.
+**Example:** The first real screen can simply list customers. Then add the creation form, followed by editing and deactivation. At each stage, handle loading, success, error, and empty-list states explicitly.
 
 
-- [ ] Estudar modelagem de produtos, categorias e valores monetários.
+- [ ] Create a customer list screen.
 
-- [ ] Definir escopo mínimo.
+- [ ] Create a customer form.
 
-- [ ] Criar banco e migrations.
+- [ ] Integrate customer creation with the API.
 
-- [ ] Criar endpoints e testes.
+- [ ] Integrate editing.
 
-- [ ] Criar telas básicas.
+- [ ] Integrate deactivation.
 
-### Estoque
+- [ ] Display loading, error, success, and empty-list states.
 
-**Exemplo:** registrar entrada de 10 unidades, saída de 3 e confirmar saldo 7. Tentar retirar 8 deve falhar sem alterar o saldo. Esse caso ensina transação, validação e histórico.
+- [ ] Manually test the complete workflow.
 
+**Phase 3 deliverable:** A user can enter the workflow, select a tenant, and manage customers through the interface.
 
-- [ ] Estudar transações e consistência.
-
-- [ ] Definir movimentos, saldo e histórico.
-
-- [ ] Criar banco, backend, testes e telas.
-
-### Pedidos
-
-**Exemplo:** criar um pedido em `DRAFT` com um produto, calcular o total e confirmar. A confirmação só pode diminuir o estoque se houver saldo suficiente; se falhar, pedido e estoque não podem ficar parcialmente atualizados.
-
-
-- [ ] Estudar máquina de estados e transações.
-
-- [ ] Criar rascunho e itens.
-
-- [ ] Calcular subtotal, desconto e total.
-
-- [ ] Confirmar pedido validando estoque.
-
-- [ ] Integrar pedido e estoque.
-
-### Recebíveis e painel
-
-**Exemplo:** um pedido confirmado de 100 cria um recebível de 100. Um pagamento de 40 deixa saldo 60 e estado parcial. O painel pode começar mostrando apenas vendas do mês e total em aberto.
-
-
-- [ ] Estudar pagamentos parciais, saldo e vencimento.
-
-- [ ] Criar recebíveis após confirmação.
-
-- [ ] Criar registros de pagamento.
-
-- [ ] Criar indicadores simples por empresa e período.
+**Before proceeding:** I must be able to explain how the frontend calls the API and what happens in loading, success, error, and empty-list states.
 
 ---
 
-## Quadro semanal
+## Phase 4 — Future Modules
 
-Copie esta seção para cada semana:
+Do not start this phase until the first end-to-end workflow is complete.
 
-**Semana de:** ____ / ____ / ____
+### Catalog and Pricing
 
-**Objetivo único:** __________________________________________
+**Example:** Start with a “Lipstick” category and a “Pink Lipstick” product with a decimal price. Do not implement promotions, multiple price lists, or bulk imports in the first version.
 
-**Estudar antes:** ___________________________________________
 
-- [ ] Estudo concluído
+- [ ] Study product, category, and monetary value modeling.
 
-- [ ] Notas escritas com minhas próprias palavras
+- [ ] Define the minimum scope.
 
-- [ ] Implementação pequena concluída
+- [ ] Create the database tables and migrations.
 
-- [ ] Teste/verificação executado
+- [ ] Create endpoints and tests.
 
-- [ ] Dúvidas registradas
+- [ ] Create basic screens.
 
-- [ ] Documentação atualizada
+### Inventory
 
-**O que aprendi:**
+**Example:** Record an incoming quantity of 10 units, an outgoing quantity of 3, and verify a balance of 7. Attempting to remove 8 units must fail without changing the balance. This scenario teaches transactions, validation, and history.
+
+
+- [ ] Study transactions and consistency.
+
+- [ ] Define stock movements, balances, and history.
+
+- [ ] Build the database, backend, tests, and screens.
+
+### Orders
+
+**Example:** Create a `DRAFT` order with one product, calculate the total, and confirm it. Confirmation may reduce stock only when sufficient inventory exists. If confirmation fails, neither the order nor inventory may be partially updated.
+
+
+- [ ] Study state machines and transactions.
+
+- [ ] Create order drafts and items.
+
+- [ ] Calculate subtotal, discount, and total.
+
+- [ ] Confirm orders while validating inventory.
+
+- [ ] Integrate orders and inventory.
+
+### Receivables and Dashboard
+
+**Example:** A confirmed order worth 100 creates a receivable of 100. A payment of 40 leaves a balance of 60 and a partially paid status. The dashboard can initially show only monthly sales and the outstanding balance.
+
+
+- [ ] Study partial payments, balances, and due dates.
+
+- [ ] Create receivables after order confirmation.
+
+- [ ] Create payment records.
+
+- [ ] Create basic metrics by tenant and period.
+
+---
+
+## Weekly Checklist
+
+Copy this section for each week:
+
+**Week of:** ____ / ____ / ____
+
+**Single objective:** __________________________________________
+
+**Study first:** ___________________________________________
+
+- [ ] Study completed
+
+- [ ] Notes written in my own words
+
+- [ ] Small implementation completed
+
+- [ ] Test or verification executed
+
+- [ ] Questions recorded
+
+- [ ] Documentation updated
+
+**What I learned:**
 
 >
 
-**O que ficou difícil:**
+**What was difficult:**
 
 >
 
-**Próximo passo concreto:**
+**Next concrete step:**
 
 >
 
-## Quando estiver perdido
+## When You Are Stuck
 
-Pare de codificar e responda, por escrito:
+Stop coding and answer these questions in writing:
 
-1. Qual comportamento estou tentando entregar?
+1. What behavior am I trying to deliver?
 
-1. Qual conceito ainda não entendo?
+1. Which concept do I still not understand?
 
-1. Que menor exemplo posso fazer isoladamente?
+1. What is the smallest example I can build in isolation?
 
-1. Como vou saber que funcionou?
+1. How will I know it worked?
 
-1. Essa decisão está definida em [requisitos](requirements.md) ou ainda é uma pendência?
+1. Is this decision defined in [requirements](requirements.md), or is it still unresolved?
 
-Se não conseguir responder, a próxima tarefa é **estudar e esclarecer**, não implementar mais código.
+If I cannot answer these questions, the next task is to **study and clarify**, not to implement more code.
