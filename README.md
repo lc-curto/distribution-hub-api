@@ -1,10 +1,10 @@
 # Distribution Hub API
 
-Backend do **Distribution Hub**, uma aplicação de gestão comercial desenvolvida como MVP e projeto de portefólio profissional.
+Backend for **Distribution Hub**, a commercial management application developed as a Minimum Viable Product (MVP) and a professional portfolio project.
 
-O frontend está no repositório [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web).
+The frontend is available in the [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web) repository.
 
-## Tecnologias
+## Technologies
 
 - Python 3.12
 - FastAPI
@@ -12,12 +12,12 @@ O frontend está no repositório [distribution-hub-web](https://github.com/lc-cu
 - Alembic
 - PostgreSQL 16
 - Docker Compose
-- pytest e Ruff
+- pytest and Ruff
 - GitHub Actions
 
-## Arquitetura
+## Architecture
 
-A aplicação utiliza uma arquitetura de monólito modular. O frontend comunica com a API por HTTP/JSON, e a API utiliza SQLAlchemy para aceder à base de dados PostgreSQL.
+The application follows a modular monolith architecture. The frontend communicates with the API over HTTP/JSON, and the API uses SQLAlchemy to access the PostgreSQL database.
 
 ```text
 Frontend React/TypeScript
@@ -27,30 +27,30 @@ Frontend React/TypeScript
      PostgreSQL
 ```
 
-## Estado atual
+## Current Status
 
-A base do backend inclui:
+The backend foundation includes:
 
-- Endpoint `GET /health`;
-- Configuração através de variáveis de ambiente;
-- Ligação ao PostgreSQL com SQLAlchemy;
-- Migrations com Alembic;
-- Modelos iniciais `User` e `Tenant`;
-- Testes automatizados e validação com GitHub Actions.
+- `GET /health` endpoint;
+- Configuration through environment variables;
+- PostgreSQL connectivity using SQLAlchemy;
+- Database migrations managed with Alembic;
+- Initial `User` and `Tenant` models;
+- Automated tests and validation through GitHub Actions.
 
-Os módulos comerciais — como clientes, catálogo, encomendas, inventário e recebíveis — ainda não têm os respetivos fluxos de API implementados. Consulta a documentação para distinguir funcionalidades implementadas de requisitos planeados.
+The business modules — including customers, catalog, orders, inventory, and receivables — do not yet have their corresponding API workflows implemented. Refer to the documentation to distinguish implemented features from planned requirements.
 
-## Como executar localmente
+## Running Locally
 
-### Pré-requisitos
+### Prerequisites
 
 - Python 3.12;
-- Docker Desktop com Docker Compose;
+- Docker Desktop with Docker Compose;
 - Git.
 
-### Preparar o ambiente
+### Setting Up the Environment
 
-Na pasta do projeto, cria e ativa um ambiente virtual e instala as dependências:
+From the project directory, create and activate a virtual environment and install the dependencies:
 
 ```powershell
 python -m venv .venv
@@ -60,66 +60,66 @@ pip install -e ".[dev]"
 Copy-Item .env.example .env
 ```
 
-Inicia o PostgreSQL:
+Start PostgreSQL:
 
 ```powershell
 docker compose up -d postgres
 ```
 
-Aplica as migrations:
+Apply the database migrations:
 
 ```powershell
 alembic upgrade head
 ```
 
-Inicia a API:
+Start the API:
 
 ```powershell
 uvicorn app.main:app --reload
 ```
 
-A API fica disponível em `http://127.0.0.1:8000`.
+The API will be available at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
-- **Documentação interativa:** http://127.0.0.1:8000/docs
-- **Health check:** http://127.0.0.1:8000/health
+- **Interactive API documentation:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **Health check:** [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
-Confirma no ficheiro `.env` se a variável `DATABASE_URL` aponta para a base de dados local correta.
+Check the `.env` file to ensure that `DATABASE_URL` points to the correct local database.
 
-## Testes
+## Tests
 
-Executa os testes com:
+Run the tests with:
 
 ```powershell
 pytest
 ```
 
-Os testes de integração necessitam de uma base de dados de teste separada. Configura `TEST_DATABASE_URL` para essa base antes de executar os testes de integração. Não utilizes a base de dados de desenvolvimento para testes.
+Integration tests require a separate test database. Configure `TEST_DATABASE_URL` to point to that database before running the integration tests. Do not use the development database for testing.
 
-A integração contínua executa os testes e a verificação de estilo com Ruff.
+The continuous integration pipeline runs the tests and checks code style with Ruff.
 
-## Estrutura principal
+## Main Structure
 
 ```text
 app/
-├── core/       # Configuração da aplicação
-├── db/         # Base de dados e modelos
-├── modules/    # Módulos da aplicação
-└── main.py     # Entrada da API
-alembic/        # Migrations da base de dados
-tests/          # Testes automatizados
-docs/           # Documentação do produto e arquitetura
+├── core/       # Application configuration
+├── db/         # Database and models
+├── modules/    # Application modules
+└── main.py     # API entry point
+alembic/        # Database migrations
+tests/          # Automated tests
+docs/           # Product and architecture documentation
 ```
 
-## Documentação
+## Documentation
 
-- [Índice da documentação](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/README.md)
-- [Produto e âmbito](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/product.md)
-- [Domínio e regras de negócio](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/domain.md)
-- [Requisitos](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/requirements.md)
-- [Arquitetura](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/architecture.md)
+- [Documentation Index](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/README.md)
+- [Product and Scope](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/product.md)
+- [Domain and Business Rules](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/domain.md)
+- [Requirements](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/requirements.md)
+- [Architecture](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/architecture.md)
 - [API](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/api.md)
-- [Modelo Entidade–Relacionamento](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/er.md)
+- [Entity–Relationship Model](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/er.md)
 
-## Repositórios relacionados
+## Related Repositories
 
 - **Frontend:** [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web)
