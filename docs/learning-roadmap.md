@@ -163,7 +163,7 @@ Before starting, explain in one sentence: “The virtual environment separates t
 
 ### 1.2 User, Tenant, and Membership Models
 
-**Status:** The `User`, `Tenant`, and `TenantUser` SQLAlchemy models and their migrations exist in the repository. Tests cover tenant model persistence. The API does not yet expose commercial endpoints for these models.
+**Status:** The `User`, `Tenant`, and `TenantUser` SQLAlchemy models and their migrations exist in the repository. Tests cover tenant persistence and membership constraints. The API does not yet expose endpoints for these models.
 
 - [x] Create the `User` model for global user accounts.
 - [x] Create migrations for `users`, including case-insensitive email uniqueness.
@@ -183,19 +183,34 @@ Before starting, explain in one sentence: “The virtual environment separates t
 
 ### 1.3 Customers
 
-**Example:** Create customer `Loja Rosa` in Tenant A. Authorized users in Tenant A may access it, but users in Tenant B must not. When the customer is deactivated, the record remains available for historical reference but cannot be used in new orders.
+**Status:** The `Customer` SQLAlchemy model, Alembic migration, unit tests, and integration tests are implemented. The migration has been applied to the test database. Customer API endpoints and authorization are still pending.
 
-**Study:** Soft deletion and deactivation, timestamps, tenant-scoped uniqueness, and customer data modeling.
+**Implemented model:**
 
-- [ ] Define the minimum required and optional fields for `Customer`.
-- [ ] Define the relationship between `Customer` and `Tenant`.
-- [ ] Decide whether `customer_code` is required; if used, make it unique within the tenant.
-- [ ] Define customer deactivation and reactivation rules.
-- [ ] Create the SQLAlchemy model and migration.
-- [ ] Add tests for persistence, tenant ownership, and relevant constraints.
-- [ ] Verify that customers cannot be accessed across tenants.
+- Integer primary key and required tenant reference.
+- Required internal customer code, normalized to uppercase and unique case-insensitively within a tenant.
+- Customer type restricted to `INDIVIDUAL` or `COMPANY`.
+- Required name and optional email, phone, tax identifier, tax identifier country, and address.
+- Active status and creation/update timestamps.
+- Database constraints for valid customer types, nonblank customer codes, and paired tax identifier/country values.
+- Tenant foreign key with `ON DELETE RESTRICT`.
 
-**Phase 1 deliverable:** A database that can be recreated through migrations, with users, tenants, memberships, and customers.
+Country-specific tax identifier validation and external verification are not implemented. Tax identifiers are not unique by database constraint.
+
+**Study:** Soft deletion and deactivation, timestamps, tenant-scoped uniqueness, database constraints, and customer data modeling.
+
+- [x] Define the minimum required and optional fields for `Customer`.
+- [x] Define the relationship between `Customer` and `Tenant`.
+- [x] Require `customer_code` and enforce uniqueness within the tenant, ignoring case.
+- [x] Define the customer type values and database constraints.
+- [x] Implement the SQLAlchemy model and migration.
+- [x] Add unit tests for normalization and model defaults.
+- [x] Add integration tests for persistence and relevant database constraints.
+- [ ] Define and implement API-level customer deactivation and reactivation.
+- [ ] Verify customer access isolation through authorized API requests.
+- [ ] Define and implement country-specific tax identifier validation.
+
+**Phase 1 deliverable:** A database with users, tenants, memberships, and customers represented by SQLAlchemy models and migrations. Fresh-database migration verification remains pending.
 
 **Before proceeding:** I must be able to recreate the database from migrations and explain why each table exists.
 
@@ -253,26 +268,21 @@ Before starting, explain in one sentence: “The virtual environment separates t
 
 ### 2.4 Customer CRUD
 
+**Status:** Not implemented. The customer model and persistence layer exist, but the API does not expose customer management endpoints.
+
 **Example sequence:** `POST` creates “Loja Rosa”; `GET` lists the customer; `GET /customers/{id}` retrieves it; `PATCH` updates the phone number; and the deactivation action changes its status. Also test a nonexistent ID, invalid data, and a customer belonging to another tenant.
 
-
 - [ ] Create `POST /customers`.
-
 - [ ] Create `GET /customers`.
-
 - [ ] Create `GET /customers/{id}`.
-
 - [ ] Create `PATCH /customers/{id}`.
-
 - [ ] Create a deactivation action.
-
 - [ ] Always filter by the authorized tenant.
-
 - [ ] Test success, validation errors, not-found responses, and cross-tenant access.
 
 **Phase 2 deliverable:** A customer API with authorization and tests.
 
-**Before proceeding:** I must be able to explain the request flow, validate invalid data, and prove through a test that one tenant cannot access another tenants customers.
+**Before proceeding:** I must be able to explain the request flow, validate invalid data, and prove through a test that one tenant cannot access another tenant's customers.
 
 ---
 

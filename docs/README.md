@@ -1,6 +1,6 @@
 # Distribution Hub Documentation
 
-Product documentation maintained in the API repository. The frontend repository is [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web).
+Product and technical documentation maintained in the API repository. The frontend repository is [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web).
 
 ## Start Here
 
@@ -14,16 +14,20 @@ Product documentation maintained in the API repository. The frontend repository 
 
 ## Current Status
 
-The API currently exposes `GET /health`, covered by a test. Commercial endpoints have not yet been implemented. The frontend remains a scaffold.
+The API currently exposes `GET /health`, covered by a test. Customer and other commercial endpoints have not yet been implemented. The frontend remains a scaffold.
 
-The backend includes the SQLAlchemy `User`, `Tenant`, and `TenantUser` models, together with database migrations for `users`, `tenants`, and `tenant_users`. The `tenant_users` association links users to tenants and stores each user's role and access status within a tenant.
+The backend includes the SQLAlchemy models `User`, `Tenant`, `TenantUser`, and `Customer`, with database migrations for these entities.
 
-Customer management and the remaining commercial workflows are still pending.
+The `Customer` model supports individuals and companies, belongs to a tenant, and includes an internal customer code, optional contact and tax information, an active status, and creation and update timestamps.
+
+Database constraints enforce valid customer types, nonblank customer codes, case-insensitive customer code uniqueness within a tenant, and the paired presence of tax identifier and country. Unit and integration tests cover the model and its constraints.
+
+Customer CRUD endpoints, authentication, authorization, and the remaining commercial workflows are still pending.
 
 ## Documentation Status
 
 - **Implemented:** Verified in code and supported by appropriate tests or checks.
-- **Specified:** Intended behavior documented but not yet implemented.
+- **Specified:** Intended behavior is documented but not yet implemented.
 - **To be decided:** A decision or acceptance criterion remains unresolved.
 
 Requirements and diagrams describe intended behavior; they are not evidence that a feature has been delivered.
