@@ -1,125 +1,86 @@
 # Distribution Hub API
 
-Backend for **Distribution Hub**, a commercial management application developed as a Minimum Viable Product (MVP) and a professional portfolio project.
+Backend for Distribution Hub, a multi-tenant commercial management application. The API is maintained separately from the web frontend and exposes the HTTP contract consumed by the web application.
 
-The frontend is available in the [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web) repository.
+## Current status
+
+The API is currently in its foundation stage. Implemented capabilities are:
+
+- `GET /health`;
+- configuration through environment variables;
+- PostgreSQL connectivity through SQLAlchemy;
+- Alembic migrations;
+- `User`, `Tenant`, `TenantUser`, and `Customer` models;
+- persistence and database-constraint tests for the data model.
+
+Authentication, tenant and membership endpoints, customer endpoints, catalog, inventory, orders, and receivables are not implemented. The frontend is also still a scaffold.
+
+## Architecture and documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Data model](docs/DATA_MODEL.md)
+- [Domain and product](docs/DOMAIN.md)
+- [Local runbook](docs/RUNBOOK.md)
+- [Frontend](https://github.com/lc-curto/distribution-hub-web)
+
+The documentation distinguishes implemented behavior, domain decisions, and planned capabilities. SQLAlchemy models do not automatically represent available HTTP endpoints.
 
 ## Technologies
 
-- Python 3.12
-- FastAPI
-- SQLAlchemy 2
-- Alembic
-- PostgreSQL 16
-- Docker Compose
-- pytest and Ruff
-- GitHub Actions
+- Python 3.12 in CI;
+- FastAPI;
+- SQLAlchemy 2;
+- Alembic;
+- PostgreSQL 16;
+- Docker Compose;
+- pytest;
+- Ruff;
+- GitHub Actions.
 
-## Architecture
+The project requires Python `>=3.11`; CI uses Python `3.12`.
 
-The application follows a modular monolith architecture. The frontend communicates with the API over HTTP/JSON, and the API uses SQLAlchemy to access the PostgreSQL database.
+## Quick start
 
-```text
-Frontend React/TypeScript
-        ↓ HTTP/JSON
-     API FastAPI
-        ↓ SQLAlchemy
-     PostgreSQL
-```
+Requirements: Python, Docker with Compose, and Git.
 
-## Current Status
-
-The backend foundation includes:
-
-- `GET /health` endpoint;
-- Configuration through environment variables;
-- PostgreSQL connectivity using SQLAlchemy;
-- Database migrations managed with Alembic;
-- Initial `User` and `Tenant` models;
-- Automated tests and validation through GitHub Actions.
-
-The business modules — including customers, catalog, orders, inventory, and receivables — do not yet have their corresponding API workflows implemented. Refer to the documentation to distinguish implemented features from planned requirements.
-
-## Running Locally
-
-### Prerequisites
-
-- Python 3.12;
-- Docker Desktop with Docker Compose;
-- Git.
-
-### Setting Up the Environment
-
-From the project directory, create and activate a virtual environment and install the dependencies:
-
-```powershell
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -e ".[dev]"
-Copy-Item .env.example .env
-```
-
-Start PostgreSQL:
-
-```powershell
+cp .env.example .env
 docker compose up -d postgres
-```
-
-Apply the database migrations:
-
-```powershell
 alembic upgrade head
-```
-
-Start the API:
-
-```powershell
 uvicorn app.main:app --reload
 ```
 
-The API will be available at [http://127.0.0.1:8000](http://127.0.0.1:8000).
+The API is available at `http://127.0.0.1:8000`.
 
-- **Interactive API documentation:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **Health check:** [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+- Interactive documentation: `http://127.0.0.1:8000/docs`
+- OpenAPI schema: `http://127.0.0.1:8000/openapi.json`
+- Health check: `http://127.0.0.1:8000/health`
 
-Check the `.env` file to ensure that `DATABASE_URL` points to the correct local database.
+See the [runbook](docs/RUNBOOK.md) for complete procedures.
 
-## Tests
+## Tests and quality
 
-Run the tests with:
+Integration tests require `TEST_DATABASE_URL` to point to a separate database named `distribution_hub_test`. CI creates that database, applies migrations, and runs:
 
-```powershell
+```bash
 pytest
+ruff check .
 ```
 
-Integration tests require a separate test database. Configure `TEST_DATABASE_URL` to point to that database before running the integration tests. Do not use the development database for testing.
-
-The continuous integration pipeline runs the tests and checks code style with Ruff.
-
-## Main Structure
+## Main structure
 
 ```text
-app/
-├── core/       # Application configuration
-├── db/         # Database and models
-├── modules/    # Application modules
-└── main.py     # API entry point
-alembic/        # Database migrations
-tests/          # Automated tests
-docs/           # Product and architecture documentation
+app/                  application code
+app/core/             configuration
+app/db/               base, session, and SQLAlchemy models
+app/modules/          reserved application-module directories
+alembic/              migrations
+tests/                unit and integration tests
+docs/                 technical and domain documentation
 ```
 
-## Documentation
-
-- [Documentation Index](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/README.md)
-- [Product and Scope](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/product.md)
-- [Domain and Business Rules](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/domain.md)
-- [Requirements](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/requirements.md)
-- [Architecture](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/architecture.md)
-- [API](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/api.md)
-- [Entity–Relationship Model](https://github.com/lc-curto/distribution-hub-api/blob/main/docs/er.md)
-
-## Related Repositories
-
-- **Frontend:** [distribution-hub-web](https://github.com/lc-curto/distribution-hub-web)
+This repository does not contain production infrastructure, deployment, automated backup, or a validated recovery procedure.
