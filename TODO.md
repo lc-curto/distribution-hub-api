@@ -27,10 +27,11 @@ Work on one active phase at a time. Do not start a later phase before the previo
 - [x] Define the initial actors and membership concept
 - [x] Define the initial customer rules
 - [x] Define the first end-to-end flow
-- [ ] Finalize the permission matrix
+- [x] Finalize the permission matrix
 - [ ] Finalize the authentication direction
 - [ ] Finalize the active-tenant transport
-- [ ] Record decisions before implementing affected modules
+- [x] Record the permission decision in the domain documentation
+- [ ] Record remaining decisions before implementing affected modules
 
 ### Exit criteria
 

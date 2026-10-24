@@ -16,18 +16,50 @@ This is a product rule, but HTTP authentication and authorization are not implem
 
 ## Actors and permissions
 
-The planned roles are:
+The system uses tenant-scoped RBAC (Role-Based Access Control). A user's role belongs to the membership in a tenant, not to the global user account. The permission model uses least privilege: a role receives only the actions required for its responsibilities.
 
-| Area | ADMIN | OPERATOR |
+### Permission matrix
+
+| Resource or operation | ADMIN | OPERATOR |
 |---|---|---|
-| Users, memberships, and settings | manage | no administrative permission |
-| Customers | create, read, update, and deactivate | create, read, update, and deactivate |
-| Catalog and pricing | manage | view and use permitted prices |
-| Inventory | manage operations | view and record permitted operations |
-| Orders | create, confirm, and cancel according to rules | create and view; confirmation remains undecided |
-| Receivables and payments | manage according to rules | record permitted operations |
+| View the tenant dashboard | Yes | Yes |
+| Manage users, memberships, and tenant settings | Yes | No |
+| View customers | Yes | Yes |
+| Create customers | Yes | Yes |
+| Update customers | Yes | Yes |
+| Deactivate customers | Yes | Yes |
+| Reactivate customers | Yes | No |
+| Physically delete customers | No | No |
+| View categories, products, and prices | Yes | Yes |
+| Create, update, deactivate, and delete catalog records | Yes | No |
+| View stock balances and movement history | Yes | Yes |
+| Record ordinary stock receipts and issues | Yes | Yes |
+| Perform stock adjustments | Yes | No |
+| Create and update order drafts | Yes | Yes |
+| View orders | Yes | Yes |
+| Confirm orders | Yes | No |
+| Cancel orders | Yes | No |
+| View receivables and payment history | Yes | Yes |
+| Record permitted payments | Yes | Yes |
+| Void payments, write off balances, or change financial rules | Yes | No |
 
-The final permission matrix must be decided before each module is implemented.
+`Yes` means that the action is allowed only after identity, active membership, tenant scope, and any resource-specific business rule have been validated. `No` means that the action must be rejected by the API, not merely hidden by the frontend.
+
+### Authorization rules
+
+The following rules apply to every protected operation:
+
+1. Access is denied by default when no permission is explicitly granted.
+2. The user account must be active.
+3. The membership for the requested tenant must be active.
+4. The role is evaluated within the requested tenant.
+5. Every query and mutation must be restricted to the authorized tenant.
+6. A client-provided `tenant_id` is not proof of authorization.
+7. Physical deletion is not available for customers, confirmed orders, stock movements, receivables, or confirmed payments.
+8. The last active `ADMIN` of a tenant cannot be removed or demoted.
+9. The frontend may hide unavailable actions, but the backend remains the security boundary.
+
+This matrix is a product decision. The authorization code, request dependencies, and authorization tests are still pending implementation.
 
 ## Customers
 
@@ -84,7 +116,7 @@ Catalog, inventory, orders, receivables, and dashboards are outside this first f
 
 - production authentication provider and flow;
 - active-tenant transport;
-- final `OPERATOR` permission matrix;
+- implementation mechanism for the approved permission matrix;
 - customer pagination, filtering, and ordering;
 - customer reactivation;
 - country-specific tax-identifier validation;
