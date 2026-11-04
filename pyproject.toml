@@ -14,7 +14,7 @@ dependencies = ["fastapi>=0.115",
 
 [project.optional-dependencies]
 dev = [         "pytest>=8.3", 
-                "httpx>=0.28", 
+                "httpx2>=2.16",
                 "ruff>=0.9"]
 
 [tool.pytest.ini_options]
